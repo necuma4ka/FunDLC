@@ -1287,3 +1287,51 @@ body.light-theme .account-modal{background:transparent!important}
   .card.subscription > .beta-netherite-icon img{width:116px !important;height:116px !important}
 }
 </style>
+<style id="crystal-size-fix-v2">
+/* Crystal cards: the crystal itself should occupy the image area, not look like a tiny icon. */
+.card.subscription > .basic-diamond-icon,
+.card.subscription > .beta-netherite-icon{
+  height:158px !important;
+  min-height:158px !important;
+  width:100% !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  position:relative !important;
+}
+.card.subscription > .basic-diamond-icon img,
+.card.subscription > .beta-netherite-icon img{
+  width:180px !important;
+  height:180px !important;
+  max-width:none !important;
+  max-height:none !important;
+  padding:0 !important;
+  object-fit:contain !important;
+  flex:0 0 auto !important;
+  transform:scale(1.18) !important;
+}
+.card.subscription > .basic-diamond-icon img{
+  filter:drop-shadow(0 0 18px rgba(255,120,0,.62)) !important;
+}
+.card.subscription > .beta-netherite-icon img{
+  filter:drop-shadow(0 0 20px rgba(0,150,255,.68)) !important;
+}
+@media(max-width:760px){
+  .card.subscription > .basic-diamond-icon,
+  .card.subscription > .beta-netherite-icon{
+    height:145px !important;
+    min-height:145px !important;
+  }
+  .card.subscription > .basic-diamond-icon img,
+  .card.subscription > .beta-netherite-icon img{
+    width:165px !important;
+    height:165px !important;
+  }
+}
+</style>
+<script>
+// Correct accessibility labels for the crystal artwork.
+document.querySelector('.basic-diamond-icon')?.setAttribute('aria-label','Оранжевый кристалл');
+document.querySelector('.beta-netherite-icon')?.setAttribute('aria-label','Синий кристалл');
+</script>
