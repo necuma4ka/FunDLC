@@ -193,54 +193,28 @@ html,body{background:#07080b}
 @media(max-width:700px){.fundlc-tabs .nav-buy{display:none}.fundlc-nav{padding-left:3%;padding-right:3%;}.fundlc-tabs .nav-account span{display:none}}
 </style>
 
-<style id="fundlc-minecraft-background">
-html, body {
-  background: #071018 !important;
-  min-height: 100%;
+<style id="fundlc-mangrove-background">
+html,body{background:#07130e!important;min-height:100%}
+body{position:relative;isolation:isolate;background:transparent!important}
+body::before{
+ content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+ background:
+   linear-gradient(180deg,rgba(4,12,9,.28) 0%,rgba(4,12,9,.12) 38%,rgba(3,10,8,.78) 100%),
+   url("./mangrove-background.png") center center/cover no-repeat;
+ transform:scale(1.01);
 }
-body {
-  position: relative;
-  isolation: isolate;
-  background: transparent !important;
+body::after{
+ content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(circle at 50% 18%,rgba(89,180,111,.12),transparent 42%),
+            linear-gradient(90deg,rgba(2,9,7,.22),transparent 30%,transparent 70%,rgba(2,9,7,.22));
 }
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background:
-    linear-gradient(180deg, rgba(3,8,14,.38) 0%, rgba(3,8,14,.16) 35%, rgba(3,8,14,.72) 100%),
-    url("./minecraft-background.png") center top / cover no-repeat;
-  transform: scale(1.015);
-  pointer-events: none;
+.nav{
+ background:rgba(5,15,12,.62)!important;
+ backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+ border-bottom-color:rgba(255,255,255,.10)!important;
 }
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 18%, rgba(40,150,255,.10), transparent 38%),
-    linear-gradient(90deg, rgba(2,7,12,.18), transparent 28%, transparent 72%, rgba(2,7,12,.22));
-}
-.nav {
-  background: rgba(7,12,19,.58) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom-color: rgba(255,255,255,.10) !important;
-}
-.card, .why .card, .notice, .purchase-modal, .account-modal {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-.section {
-  position: relative;
-}
-@media (max-width: 700px) {
-  body::before {
-    background-position: 62% top;
-  }
+.card,.notice,.purchase-modal,.account-modal{
+ backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
 }
 </style>
 

@@ -1,6 +1,10 @@
-# FunDLC — Minecraft background
+# FunDLC — Mangrove Minecraft background
 
-В эту версию добавлен мультяшный voxel/Minecraft-inspired фон на весь сайт.
-Фон лежит локально в `minecraft-background.png`, поэтому GitHub Pages сможет его показывать без внешних ссылок.
+Добавлен чистый мультяшный Minecraft-inspired фон мангрового биома с лягушками.
+На изображении нет текста или элементов интерфейса.
 
-Замените `index.html` и добавьте `minecraft-background.png` в корень репозитория.
+Файлы:
+- index.html
+- mangrove-background.png
+
+Загрузите оба файла в корень GitHub Pages проекта FunDLC.
