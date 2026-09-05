@@ -284,6 +284,54 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 .beta-netherite-icon{overflow:hidden;background:transparent!important;border:0!important;width:145px;height:145px;margin-bottom:12px;border-radius:0!important;}
 .beta-netherite-icon img{width:100%;height:100%;display:block;object-fit:contain;padding:6px;image-rendering:auto;background:transparent!important;filter:drop-shadow(0 0 8px rgba(130,125,140,.38));}
 </style>
+
+<style>
+/* Crystal artwork for the pricing cards */
+.basic-diamond-icon,
+.beta-netherite-icon{
+  width:100%;
+  height:205px;
+  margin:0 0 20px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  position:relative;
+  border:1px solid #33261c;
+}
+.basic-diamond-icon{
+  background:radial-gradient(circle at 50% 52%,#3b1805 0%,#180b05 48%,#0d0a0a 100%);
+  box-shadow:inset 0 0 45px #ff6a0030,0 8px 30px #ff6a0012;
+}
+.beta-netherite-icon{
+  background:radial-gradient(circle at 50% 52%,#062b4a 0%,#06121f 48%,#080b12 100%);
+  border-color:#163b5b;
+  box-shadow:inset 0 0 45px #008cff32,0 8px 30px #008cff12;
+}
+.basic-diamond-icon img,
+.beta-netherite-icon img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  transform:scale(1.12);
+  filter:drop-shadow(0 0 14px rgba(255,106,0,.35));
+}
+.beta-netherite-icon img{
+  filter:drop-shadow(0 0 16px rgba(0,153,255,.4));
+}
+.basic-diamond-icon::after,
+.beta-netherite-icon::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 35%,rgba(0,0,0,.12));
+}
+@media(max-width:760px){
+  .basic-diamond-icon,.beta-netherite-icon{height:180px}
+}
+</style>
 </head>
 
 <script>/* Flags are embedded locally as PNG data URLs for reliable rendering. */</script>
@@ -367,7 +415,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   <div class="sub" data-i18n="accessSub">Простые тарифы без лишнего.</div>
   <div class="grid">
     <article class="card subscription" data-plan="basic">
-      <div class="icon basic-diamond-icon" aria-label="Золотой блок"><img src="gold_block_icon.png" alt="Золотой блок"></div>
+      <div class="icon basic-diamond-icon" aria-label="Золотой блок"><img src="orange_crystal.png" alt="Оранжевый кристалл"></div>
       <h3>FunDLC Basic</h3>
       <p data-i18n="basicText">Основная версия клиента для комфортной игры.</p>
       <div class="beta-only">
@@ -381,7 +429,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 
     <article class="card featured subscription" data-plan="beta">
       <div class="tag">BETA</div>
-      <div class="icon beta-netherite-icon" aria-label="Алмазный блок"><img src="diamond_block_icon.png" alt="Алмазный блок"></div>
+      <div class="icon beta-netherite-icon" aria-label="Алмазный блок"><img src="blue_crystal.png" alt="Синий кристалл"></div>
       <h3>FunDLC Beta</h3>
       <p data-i18n="betaText">Доступ к Beta-версии клиента. Подписка доступна только навсегда.</p>
       <div class="price">1 999 ₽ <small>/ навсегда</small></div>
