@@ -254,6 +254,26 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 .flag-icon .lang-flag-img,.lang-flag-img{display:block!important;width:22px!important;height:15px!important;min-width:22px!important;min-height:15px!important;max-width:22px!important;max-height:15px!important;object-fit:fill!important;margin:0!important;border-radius:2px;border:1px solid #ffffff22;filter:none!important;opacity:1!important;visibility:visible!important;mix-blend-mode:normal!important}
 .lang-option{display:flex;align-items:center;gap:9px;min-height:38px}
 </style>
+
+<style id="basic-diamond-icon-style">
+.basic-diamond-icon{
+  overflow:hidden;
+  background:transparent!important;
+  border:0!important;
+  width:58px;
+  height:58px;
+  margin-bottom:20px;
+  border-radius:0!important;
+}
+.basic-diamond-icon img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  image-rendering:auto;
+  filter:drop-shadow(0 0 8px rgba(0,220,255,.35));
+}
+</style>
 </head>
 
 <script>/* Flags are embedded locally as PNG data URLs for reliable rendering. */</script>
@@ -337,7 +357,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   <div class="sub" data-i18n="accessSub">Простые тарифы без лишнего.</div>
   <div class="grid">
     <article class="card subscription" data-plan="basic">
-      <div class="icon" data-icon="rocket"></div>
+      <div class="icon basic-diamond-icon" aria-label="Алмазный блок"><img src="diamond_block_icon.png" alt="Алмазный блок"></div>
       <h3>FunDLC Basic</h3>
       <p data-i18n="basicText">Основная версия клиента для комфортной игры.</p>
       <div class="beta-only">
