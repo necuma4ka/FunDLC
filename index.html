@@ -1382,3 +1382,30 @@ document.querySelector('.beta-netherite-icon')?.setAttribute('aria-label','Си�
   }
 }
 </style>
+<style id="crystal-horizontal-fit-final">
+/* Match the real 2.4:1 artwork area: stretch the crystal horizontally, not vertically. */
+.card.subscription > .basic-diamond-icon,
+.card.subscription > .beta-netherite-icon{
+  aspect-ratio: 1200 / 500 !important;
+  height:auto !important;
+  min-height:0 !important;
+  width:100% !important;
+  overflow:hidden !important;
+}
+.card.subscription > .basic-diamond-icon img,
+.card.subscription > .beta-netherite-icon img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:fill !important;
+  transform:scaleX(1.55) !important;
+  transform-origin:center center !important;
+}
+@media(max-width:760px){
+  .card.subscription > .basic-diamond-icon,
+  .card.subscription > .beta-netherite-icon{
+    aspect-ratio:1200 / 500 !important;
+    height:auto !important;
+    min-height:0 !important;
+  }
+}
+</style>
