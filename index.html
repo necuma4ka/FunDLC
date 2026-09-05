@@ -1383,29 +1383,35 @@ document.querySelector('.beta-netherite-icon')?.setAttribute('aria-label','Си�
 }
 </style>
 <style id="crystal-horizontal-fit-final">
-/* Match the real 2.4:1 artwork area: stretch the crystal horizontally, not vertically. */
+/* Final: compact top artwork area so the BETA badge always remains visible. */
 .card.subscription > .basic-diamond-icon,
 .card.subscription > .beta-netherite-icon{
-  aspect-ratio: 1200 / 500 !important;
-  height:auto !important;
-  min-height:0 !important;
   width:100% !important;
+  height:145px !important;
+  min-height:145px !important;
+  max-height:145px !important;
+  margin:0 0 14px !important;
   overflow:hidden !important;
+  position:relative !important;
+  z-index:1 !important;
 }
 .card.subscription > .basic-diamond-icon img,
 .card.subscription > .beta-netherite-icon img{
   width:100% !important;
   height:100% !important;
   object-fit:fill !important;
-  transform:scaleX(1.55) !important;
+  transform:none !important;
   transform-origin:center center !important;
+}
+.card.subscription > .tag{
+  z-index:20 !important;
 }
 @media(max-width:760px){
   .card.subscription > .basic-diamond-icon,
   .card.subscription > .beta-netherite-icon{
-    aspect-ratio:1200 / 500 !important;
-    height:auto !important;
-    min-height:0 !important;
+    height:130px !important;
+    min-height:130px !important;
+    max-height:130px !important;
   }
 }
 </style>
