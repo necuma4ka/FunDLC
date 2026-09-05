@@ -156,7 +156,66 @@ button, input, textarea, select, option {
 }
 </style>
 
+
+<title>FunDLC — Minecraft Client</title>
+<meta name="application-name" content="FunDLC">
+<meta name="apple-mobile-web-app-title" content="FunDLC">
+<meta name="description" content="FunDLC — Minecraft Client">
+<meta property="og:title" content="FunDLC — Minecraft Client">
+<meta property="og:site_name" content="FunDLC">
+<meta name="theme-color" content="#0b0c10">
+
+
+<style id="fundlc-final-cabinet">
+html,body{background:#07080b}
+.account-modal{
+  width:100vw!important;max-width:none!important;height:100dvh!important;min-height:100vh;
+  border:0!important;border-radius:0!important;padding:0!important;margin:0!important;
+  overflow:auto!important;background:radial-gradient(circle at 50% -10%,#2a1609 0,#08090d 45%,#050609 100%)!important
+}
+.account-modal .modal-close{
+  position:fixed!important;left:22px!important;top:18px!important;right:auto!important;
+  z-index:1000!important
+}
+</style>
+
 </head>
+
+<script>
+/* FunDLC — persistent account session for GitHub Pages */
+(function(){
+  const KEY='fundlc_session_v3';
+  const TTL=31*24*60*60*1000;
+
+  window.FunDLCSession={
+    save:function(account){
+      if(!account) return;
+      try{
+        localStorage.setItem(KEY,JSON.stringify({
+          account:account,
+          expiresAt:Date.now()+TTL
+        }));
+      }catch(e){}
+    },
+    load:function(){
+      try{
+        const x=JSON.parse(localStorage.getItem(KEY)||'null');
+        if(!x || !x.account || !x.expiresAt) return null;
+        if(Date.now()>=x.expiresAt){
+          localStorage.removeItem(KEY);
+          return null;
+        }
+        return x.account;
+      }catch(e){ return null; }
+    },
+    clear:function(){
+      try{localStorage.removeItem(KEY);}catch(e){}
+    }
+  };
+  document.title='FunDLC — Minecraft Client';
+})();
+</script>
+
 <body>
 <nav class="nav">
   <a class="logo" href="#top">Fun<span>DLC</span></a>
@@ -578,7 +637,7 @@ button, input, textarea, select, option {
   const error = document.getElementById('authError');
   const closeAccount = () => { accountModal.classList.remove('show'); document.body.style.overflow=''; };
   // API lives next to this page. URL() also works when the site is inside a subfolder.
-  const API_URL = new URL('api.php', window.location.href).href;
+  const API_URL = new URL('', window.location.href).href;
 
   const api = async (action, data={}) => {
     let r;
@@ -592,7 +651,7 @@ button, input, textarea, select, option {
       });
     } catch (networkError) {
       throw new Error(
-        'Не удалось подключиться к серверу. Проверь, что сайт открыт через PHP-хостинг (http/https), а файл api.php находится рядом с FunDLC_site.html. Не открывай страницу через file://.'
+        'Не удалось подключиться к серверу. Проверь, что сайт открыт через PHP-хостинг (http/https), а файл  находится рядом с FunDLC_site.html. Не открывай страницу через file://.'
       );
     }
 
@@ -602,7 +661,7 @@ button, input, textarea, select, option {
       j = JSON.parse(text);
     } catch (_) {
       throw new Error(
-        'Сервер api.php вернул не JSON (HTTP ' + r.status + '). Проверь, что PHP включён и api.php доступен.'
+        'Сервер  вернул не JSON (HTTP ' + r.status + '). Проверь, что PHP включён и  доступен.'
       );
     }
 
@@ -639,7 +698,7 @@ button, input, textarea, select, option {
       const text = await r.text();
       let j;
       try { j = JSON.parse(text); }
-      catch (_) { throw new Error('Сервер api.php вернул не JSON (HTTP ' + r.status + ').'); }
+      catch (_) { throw new Error('Сервер  вернул не JSON (HTTP ' + r.status + ').'); }
       if (!r.ok || !j.ok) throw new Error(j.error || ('Ошибка сервера HTTP ' + r.status + '.'));
       if(j.account) renderAccount(j.account);
       else { guest.style.display='block'; profile.style.display='none'; setTab('login'); }
@@ -691,25 +750,44 @@ button, input, textarea, select, option {
 </script>
 
 <script>
-window.addEventListener('load',function(){
-  setTimeout(function(){
-    try{
-      const account=window.FunDLCAuth && window.FunDLCAuth.load();
-      if(account && typeof window.renderAccount==='function'){
-        window.renderAccount(account);
-      }
-    }catch(e){}
-  },250);
-});
-</script>
-
-<script>
 document.addEventListener('click',function(e){
   const el=e.target.closest('button,a');
   if(!el) return;
   const text=(el.textContent||'').trim().toLowerCase();
   if(text.includes('выйти') || text.includes('logout')){
     if(window.FunDLCAuth) window.FunDLCAuth.clear();
+  }
+});
+</script>
+
+<script>
+(function(){
+  function hook(){
+    if(typeof window.renderAccount!=='function' || window.renderAccount.__fundlcSession) return;
+    const original=window.renderAccount;
+    function wrapped(account){
+      if(account && window.FunDLCSession) window.FunDLCSession.save(account);
+      return original.apply(this,arguments);
+    }
+    wrapped.__fundlcSession=true;
+    window.renderAccount=wrapped;
+    const saved=window.FunDLCSession && window.FunDLCSession.load();
+    if(saved){
+      setTimeout(function(){ try{ window.renderAccount(saved); }catch(e){} },50);
+    }
+  }
+  const timer=setInterval(hook,100);
+  setTimeout(function(){clearInterval(timer);hook();},12000);
+})();
+</script>
+
+<script>
+document.addEventListener('click',function(e){
+  const b=e.target.closest('button,a');
+  if(!b) return;
+  const t=(b.textContent||'').trim().toLowerCase();
+  if(t.includes('выйти')||t.includes('logout')){
+    if(window.FunDLCSession) window.FunDLCSession.clear();
   }
 });
 </script>
