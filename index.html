@@ -139,6 +139,22 @@ html,body{font-family:Inter,Arial,sans-serif}
 @keyframes accountPageIn{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}
 @media(max-width:700px){.account-modal .modal-badge{margin-left:20px;margin-top:82px}.account-modal #authTitle,.account-modal #accountIntro,.account-modal #authGuest,.account-modal #accountProfile{width:calc(100% - 28px)}.cabinet-grid{grid-template-columns:1fr}.account-modal #authGuest{padding:18px}}
 
+
+/* Smooth animated reveal for the "Подробнее" section */
+html{scroll-behavior:smooth}
+#why .why-reveal{opacity:0;transform:translateY(22px);filter:blur(6px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1),filter .65s ease}
+#why.revealed .why-reveal{opacity:1;transform:none;filter:blur(0)}
+#why.revealed .why-reveal:nth-child(1){transition-delay:.05s}
+#why.revealed .why-reveal:nth-child(2){transition-delay:.16s}
+#why.revealed .why-reveal:nth-child(3){transition-delay:.27s}
+#why.revealed .why-reveal:nth-child(4){transition-delay:.38s}
+#why.revealed .why-reveal:nth-child(5){transition-delay:.49s}
+#why.revealed .why-reveal:nth-child(6){transition-delay:.60s}
+#why .why-title-reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+#why.revealed .why-title-reveal{opacity:1;transform:none}
+#why.revealed .why-sub-reveal{transition-delay:.12s}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#why .why-reveal,#why .why-title-reveal,#why.revealed .why-reveal,#why.revealed .why-title-reveal{opacity:1;transform:none;filter:none;transition:none!important}}
+
 </style>
 
 <style id="minecraft-font-force">
@@ -338,11 +354,11 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 </section>
 
 <section class="section" id="why">
-  <h2 data-i18n="whyTitle">Почему FunDLC?</h2><div class="sub" data-i18n="whySub">Минимализм, скорость и удобство.</div>
+  <h2 class="why-title-reveal" data-i18n="whyTitle">Почему FunDLC?</h2><div class="sub why-title-reveal why-sub-reveal" data-i18n="whySub">Минимализм, скорость и удобство.</div>
   <div class="why">
-    <div class="card"><div class="icon" data-icon="layout"></div><h3 data-i18n="why1Title">Чистый интерфейс</h3><p data-i18n="why1Text">Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.</p></div>
-    <div class="card"><div class="icon" data-icon="bolt"></div><h3 data-i18n="why2Title">Производительность</h3><p data-i18n="why2Text">Оптимизированный интерфейс без ощущения перегруженности.</p></div>
-    <div class="card"><div class="icon" data-icon="settings"></div><h3 data-i18n="why3Title">Гибкие настройки</h3><p data-i18n="why3Text">Настраивай внешний вид и поведение доступных функций под себя.</p></div>
+    <div class="card why-reveal"><div class="icon" data-icon="layout"></div><h3 data-i18n="why1Title">Чистый интерфейс</h3><p data-i18n="why1Text">Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.</p></div>
+    <div class="card why-reveal"><div class="icon" data-icon="bolt"></div><h3 data-i18n="why2Title">Производительность</h3><p data-i18n="why2Text">Оптимизированный интерфейс без ощущения перегруженности.</p></div>
+    <div class="card why-reveal"><div class="icon" data-icon="settings"></div><h3 data-i18n="why3Title">Гибкие настройки</h3><p data-i18n="why3Text">Настраивай внешний вид и поведение доступных функций под себя.</p></div>
   </div>
 </section>
 
@@ -716,10 +732,18 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
       ['Навсегда', '1499 ₽']
     ];
     const update = () => {
-      const [days, price] = plans[Number(slider.value)] || plans[1];
+      const index = Number(slider.value);
+      const [days, price] = plans[index] || plans[1];
+      const min = Number(slider.min) || 0;
+      const max = Number(slider.max) || (plans.length - 1);
+      const fill = max > min ? ((index - min) / (max - min)) * 100 : 0;
+      slider.style.setProperty('--fill', `${fill}%`);
       daysValue.textContent = days;
       daysPrice.textContent = price;
       summary.textContent = `${days} • ${price}`;
+      daysValue.classList.remove('bump');
+      void daysValue.offsetWidth;
+      daysValue.classList.add('bump');
     };
     slider.addEventListener('input', update);
     update();
@@ -847,6 +871,80 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   const icons={rocket:'<svg viewBox="0 0 24 24"><path d="M14 4c2-2 5-2 6-2 0 1 0 4-2 6l-5 5-4-4 5-5Z"/><path d="M9 15 5 19M5 19l-2 3 3-2M8 7H4l-2 3 6 1M17 16v4l-3 2-1-6"/><circle cx="17" cy="6" r="1.5"/></svg>',diamond:'<svg viewBox="0 0 24 24"><path d="m12 3 7 7-7 11L5 10l7-7Z"/><path d="M5 10h14M9 10l3 11 3-11-3-7-3 7Z"/></svg>',layout:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg>',bolt:'<svg viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="m19.4 15 .1.1a2 2 0 1 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4v.2a2 2 0 1 1-4 0v-.2A2 2 0 0 0 5.8 17.8l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A2 2 0 0 0 1.6 12a2 2 0 1 1 4 0v.2A2 2 0 0 0 9 10.8l.2-.1A2 2 0 1 1 12 8l-.1.1A2 2 0 0 0 15.3 9.5V9.3a2 2 0 1 1 4 0v.2a2 2 0 0 0 .1 5.5Z"/></svg>'};
   document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icons[el.dataset.icon]||'');
   setLang(localStorage.getItem(langKey)||'ru');setTheme(localStorage.getItem(themeKey)||'dark');
+})();
+</script>
+
+
+<script id="why-reveal-animation">
+(function(){
+  const section = document.getElementById('why');
+  const detailsLink = document.querySelector('a[href="#why"][data-i18n="details"]');
+  if (!section) return;
+
+  function reveal(){ section.classList.add('revealed'); }
+
+  if (detailsLink) {
+    detailsLink.addEventListener('click', function(e){
+      e.preventDefault();
+      reveal();
+      section.scrollIntoView({behavior:'smooth', block:'start'});
+      history.replaceState(null, '', '#why');
+    });
+  }
+
+  if (window.location.hash === '#why') {
+    requestAnimationFrame(function(){ setTimeout(reveal, 80); });
+  }
+
+  const observer = new IntersectionObserver(function(entries){
+    if (entries.some(entry => entry.isIntersecting)) {
+      reveal();
+      observer.disconnect();
+    }
+  }, {threshold:0.18});
+  observer.observe(section);
+})();
+</script>
+
+<script id="fundlc-click-sounds">
+(function(){
+  let ctx=null;
+  function audio(){
+    if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+    if(ctx.state==='suspended') ctx.resume();
+    return ctx;
+  }
+  function tone(freq,dur,type='sine',gain=.035,delay=0){
+    const c=audio(), o=c.createOscillator(), g=c.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,c.currentTime+delay);
+    g.gain.setValueAtTime(0.0001,c.currentTime+delay);
+    g.gain.exponentialRampToValueAtTime(gain,c.currentTime+delay+.008);
+    g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+delay+dur);
+    o.connect(g).connect(c.destination); o.start(c.currentTime+delay); o.stop(c.currentTime+delay+dur+.02);
+  }
+  function play(kind){
+    try{
+      if(kind==='buy'){tone(520,.08,'square',.028);tone(740,.12,'square',.025, .055);}
+      else if(kind==='theme'){tone(260,.10,'sine',.035);tone(390,.14,'sine',.03,.07);}
+      else if(kind==='lang'){tone(440,.07,'triangle',.03);tone(660,.10,'triangle',.026,.05);}
+      else if(kind==='close'){tone(360,.09,'sine',.028);tone(220,.12,'sine',.022,.05);}
+      else if(kind==='nav'){tone(480,.065,'sine',.025);tone(600,.075,'sine',.02,.045);}
+      else {tone(430,.055,'sine',.022);}
+    }catch(e){}
+  }
+  document.addEventListener('click',function(e){
+    const el=e.target.closest('button,a'); if(!el) return;
+    if(el.closest('#langMenu')) return;
+    const id=el.id||'';
+    const text=(el.textContent||'').trim().toLowerCase();
+    let kind='button';
+    if(id==='themeToggle') kind='theme';
+    else if(id==='langToggle' || el.classList.contains('lang-option')) kind='lang';
+    else if(el.classList.contains('modal-close') || el.classList.contains('account-close')) kind='close';
+    else if(el.classList.contains('buy-btn') || el.classList.contains('nav-buy') || text.includes('купить') || text.includes('buy')) kind='buy';
+    else if(el.matches('a[href^="#"]')) kind='nav';
+    play(kind);
+  },true);
 })();
 </script>
 
