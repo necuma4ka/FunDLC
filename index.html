@@ -86,7 +86,7 @@ html,body{font-family:'FunDLC Minecraft',sans-serif}
 .footer{font-family:'FunDLC Minecraft',sans-serif;font-size:12px}
 .hero h1{font-size:clamp(42px,7vw,78px);line-height:1.08;letter-spacing:-3px}
 .hero p,.sub,.card p,.why p,.purchase-modal>p{font-family:'FunDLC Minecraft',sans-serif}
-@font-face{font-family:'FunDLC Minecraft';src:url('assets/fonts/minecraft.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'FunDLC Minecraft';src:url('minecraft.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
 .logo,.badge,.links,.btn,.card h3,.tag,.price,.features,.modal-badge,.purchase-modal h2,.slider-value,.slider-labels,.confirm-buy,.hero h1{font-family:'FunDLC Minecraft',monospace}
 
 /* Tighten the Minecraft font where its punctuation has oversized metrics. */
@@ -385,7 +385,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
   <div class="sub" data-i18n="accessSub">Простые тарифы без лишнего.</div>
   <div class="grid">
     <article class="card subscription" data-plan="basic">
-      <div class="icon basic-diamond-icon" aria-label="Оранжевый кристалл"><img src="./assets/icons/basic.png" alt="Оранжевый кристалл"></div>
+      <div class="icon basic-diamond-icon" aria-label="Оранжевый кристалл"><img src="./basic.png" alt="Оранжевый кристалл"></div>
       <h3>FunDLC Basic</h3>
       <p data-i18n="basicText">Основная версия клиента для комфортной игры.</p>
       <div class="beta-only">
@@ -399,7 +399,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
 
     <article class="card featured subscription" data-plan="beta">
       <div class="tag">BETA</div>
-      <div class="icon beta-netherite-icon" aria-label="Синий кристалл"><img src="./assets/icons/beta.png" alt="Синий кристалл"></div>
+      <div class="icon beta-netherite-icon" aria-label="Синий кристалл"><img src="./beta.png" alt="Синий кристалл"></div>
       <h3>FunDLC Beta</h3>
       <p data-i18n="betaText">Доступ к Beta-версии клиента. Подписка доступна только навсегда.</p>
       <div class="price">1 999 ₽ <small>/ навсегда</small></div>
@@ -495,7 +495,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
     <div id="accountProfile" style="display:none">
       <div class="account-profile">
         <div class="avatar-wrap">
-          <img class="profile-avatar profile-avatar-img" id="profileAvatarImg" src="./assets/images/avatar-default.jpg" alt="Аватар аккаунта">
+          <img class="profile-avatar profile-avatar-img" id="profileAvatarImg" src="./avatar-default.jpg" alt="Аватар аккаунта">
           <div class="avatar-fallback profile-avatar" id="profileAvatarFallback">F</div>
         </div>
         <div class="profile-main"><strong id="profileName">Игрок</strong><span id="profileEmail">E-mail</span></div>
@@ -602,7 +602,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
   function now(){
     return new Date().toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
   }
-  const DEFAULT_AVATAR='assets/images/avatar-default.jpg';
+  const DEFAULT_AVATAR='avatar-default.jpg';
   migrateUUIDs();
 
   function showError(msg,success=false){
