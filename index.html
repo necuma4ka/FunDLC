@@ -26,7 +26,7 @@ a{text-decoration:none;color:inherit}.nav{height:72px;border-bottom:1px solid va
 .slider-wrap{background:#0a0c10;border:1px solid #252933;border-radius:15px;padding:22px 20px 18px}
 .slider-value{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:20px;font-weight:900}
 .slider-value strong{color:#ff8a32}
-input[type=range]{appearance:none;width:100%;height:30px;border:0;background:transparent;outline:none;cursor:pointer;position:relative;z-index:3;margin:0}
+input[type=range]{appearance:none;width:100%;height:30px;border:0;background:transparent;outline:none;cursor:pointer;position:relative;z-index:3;margin:0;touch-action:pan-x}
 input[type=range]::-webkit-slider-runnable-track{height:7px;background:transparent;border:0}
 input[type=range]::-moz-range-track{height:7px;background:transparent;border:0}
 input[type=range]::-webkit-slider-thumb{appearance:none;width:24px;height:24px;margin-top:-8.5px;border-radius:50%;background:#ff8a32;border:4px solid #17100a;box-shadow:0 0 0 2px #ff6a00,0 4px 15px #ff6a0066;transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .22s ease,filter .22s ease}
@@ -85,7 +85,7 @@ html,body{font-family:Inter,Arial,sans-serif}
 .footer{font-family:Inter,Arial,sans-serif;font-size:12px}
 .hero h1{font-family:'Press Start 2P',monospace;font-size:clamp(42px,7vw,78px);line-height:1.08;letter-spacing:-3px}
 .hero p,.sub,.card p,.why p,.purchase-modal>p{font-family:Inter,Arial,sans-serif}
-@font-face{font-family:'FunDLC Minecraft';src:url('minecraft.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'FunDLC Minecraft';src:url('assets/fonts/minecraft.ttf') format('truetype');font-display:swap}
 .logo,.badge,.links,.btn,.card h3,.tag,.price,.features,.modal-badge,.purchase-modal h2,.slider-value,.slider-labels,.confirm-buy,.hero h1{font-family:'FunDLC Minecraft',monospace}
 
 /* Tighten the Minecraft font where its punctuation has oversized metrics. */
@@ -162,7 +162,7 @@ img[src*="gold_block_icon"], img[src*="diamond_block_icon"] { background: transp
 <style id="minecraft-font-force">
 @font-face {
   font-family: "FunDLCMinecraft";
-  src: url("./minecraft.ttf?v=3") format("truetype");
+  src: url("./assets/fonts/minecraft.ttf?v=3") format("truetype");
   font-style: normal;
   font-weight: 400;
   font-display: block;
@@ -370,7 +370,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   <div class="sub" data-i18n="accessSub">Простые тарифы без лишнего.</div>
   <div class="grid">
     <article class="card subscription" data-plan="basic">
-      <div class="icon basic-diamond-icon" aria-label="Оранжевый кристалл"><img src="crystal_basic.png" alt="Оранжевый кристалл"></div>
+      <div class="icon basic-diamond-icon" aria-label="Оранжевый кристалл"><img src="assets/icons/basic.png" alt="Оранжевый кристалл"></div>
       <h3>FunDLC Basic</h3>
       <p data-i18n="basicText">Основная версия клиента для комфортной игры.</p>
       <div class="beta-only">
@@ -378,13 +378,13 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
         <div data-i18n="basicF2">✓ Настраиваемый интерфейс</div>
         <div data-i18n="basicF3">✓ Регулярные обновления</div>
       </div>
-      <div class="price">Basic</div>
+      <div class="price">от 149р</div>
       <button class="btn primary full buy-btn open-basic" data-i18n="buy">Купить</button>
     </article>
 
     <article class="card featured subscription" data-plan="beta">
       <div class="tag">BETA</div>
-      <div class="icon beta-netherite-icon" aria-label="Синий кристалл"><img src="crystal_beta.png" alt="Синий кристалл"></div>
+      <div class="icon beta-netherite-icon" aria-label="Синий кристалл"><img src="assets/icons/beta.png" alt="Синий кристалл"></div>
       <h3>FunDLC Beta</h3>
       <p data-i18n="betaText">Доступ к Beta-версии клиента. Подписка доступна только навсегда.</p>
       <div class="price">1 999 ₽ <small>/ навсегда</small></div>
@@ -480,7 +480,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
     <div id="accountProfile" style="display:none">
       <div class="account-profile">
         <div class="avatar-wrap">
-          <img class="profile-avatar profile-avatar-img" id="profileAvatarImg" src="avatar-default.jpg" alt="Аватар аккаунта">
+          <img class="profile-avatar profile-avatar-img" id="profileAvatarImg" src="assets/images/avatar-default.jpg" alt="Аватар аккаунта">
           <div class="avatar-fallback profile-avatar" id="profileAvatarFallback">F</div>
         </div>
         <div class="profile-main"><strong id="profileName">Игрок</strong><span id="profileEmail">E-mail</span></div>
@@ -587,7 +587,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   function now(){
     return new Date().toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
   }
-  const DEFAULT_AVATAR='avatar-default.jpg';
+  const DEFAULT_AVATAR='assets/images/avatar-default.jpg';
   migrateUUIDs();
 
   function showError(msg,success=false){
@@ -789,23 +789,33 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
       ['180 дней', '999 ₽'],
       ['Навсегда', '1499 ₽']
     ];
-    const update = () => {
-      const index = Math.max(0, Math.min(plans.length - 1, Math.round(Number(slider.value) || 0)));
-      slider.value = String(index);
-      const [days, price] = plans[index];
+    const progress = document.getElementById('sliderProgress');
+    const shine = document.getElementById('sliderShine');
+    const update = (animate = true) => {
       const min = Number(slider.min) || 0;
       const max = Number(slider.max) || (plans.length - 1);
-      const fill = max > min ? ((index - min) / (max - min)) * 100 : 0;
+      const raw = Number(slider.value);
+      const value = Number.isFinite(raw) ? Math.max(min, Math.min(max, raw)) : min;
+      const index = Math.max(0, Math.min(plans.length - 1, Math.round(value)));
+      const fill = max > min ? ((value - min) / (max - min)) * 100 : 0;
+      const [days, price] = plans[index];
+
       slider.style.setProperty('--fill', `${fill}%`);
+      if (progress) progress.style.width = `${fill}%`;
+      if (shine) shine.style.left = `${fill}%`;
       daysValue.textContent = days;
       daysPrice.textContent = price;
       summary.textContent = `${days} • ${price}`;
-      daysValue.classList.remove('bump');
-      void daysValue.offsetWidth;
-      daysValue.classList.add('bump');
+
+      if (animate) {
+        daysValue.classList.remove('bump');
+        void daysValue.offsetWidth;
+        daysValue.classList.add('bump');
+      }
     };
-    slider.addEventListener('input', update);
-    update();
+    slider.addEventListener('input', () => update(true));
+    slider.addEventListener('change', () => update(false));
+    update(false);
   }
 
   const confirm = basicModal.querySelector('.confirm-buy');
@@ -1089,8 +1099,8 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 <style id="fundlc-slider-pretty-animation">
 .slider-control{position:relative;height:30px;display:flex;align-items:center}
 .slider-track{position:absolute;left:0;right:0;top:11.5px;height:7px;border-radius:99px;background:#292d35;overflow:hidden;box-shadow:inset 0 1px 2px #0008}
-.slider-progress{height:100%;width:25%;border-radius:99px;background:linear-gradient(90deg,#ff6a00,#ff8a32);box-shadow:0 0 12px #ff6a0066;transition:width .28s cubic-bezier(.22,1,.36,1)}
-.slider-shine{position:absolute;top:7px;left:25%;width:22px;height:16px;border-radius:50%;transform:translateX(-50%);background:#ff8a32;filter:blur(9px);opacity:.34;pointer-events:none;z-index:1;transition:left .28s cubic-bezier(.22,1,.36,1),opacity .2s ease}
+.slider-progress{height:100%;width:25%;border-radius:99px;background:linear-gradient(90deg,#ff6a00,#ff8a32);box-shadow:0 0 12px #ff6a0066;transition:width .12s linear}
+.slider-shine{position:absolute;top:7px;left:25%;width:22px;height:16px;border-radius:50%;transform:translateX(-50%);background:#ff8a32;filter:blur(9px);opacity:.34;pointer-events:none;z-index:1;transition:left .12s linear,opacity .2s ease}
 .slider-control:hover .slider-shine{opacity:.5}
 .slider-control:active .slider-shine{opacity:.75}
 .slider-control input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12);box-shadow:0 0 0 2px #ff6a00,0 0 22px #ff8a32aa}
@@ -1194,6 +1204,9 @@ body.light-theme .nav{background:rgba(255,252,248,.78)!important;border-color:rg
 body.light-theme .card,body.light-theme .purchase-modal,body.light-theme .account-profile{background:rgba(255,255,255,.78)!important;border-color:rgba(224,113,35,.18)!important}
 body.light-theme .hero{background:transparent!important;border-color:rgba(224,113,35,.14)!important}
 body.light-theme .account-modal{background:transparent!important}
+body.light-theme .beta-only{color:#e89a63!important}
+.modal-close:hover{color:#ff3b30!important}
+body.light-theme .account-modal .modal-close:hover{color:#ff3b30!important}
 @media(max-width:760px){body{background-attachment:scroll!important}.hero{min-height:620px;margin:16px 14px 0;padding:55px 22px;border-radius:22px}}
 </style>
 
