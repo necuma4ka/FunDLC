@@ -235,7 +235,6 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 </style>
 
 
-<style id="fundlc-warden-bg-final">
 html,body{background:#070304!important;min-height:100%}
 body{position:relative;isolation:isolate;background:transparent!important}
 body::before{
@@ -243,7 +242,6 @@ body::before{
  background:
  linear-gradient(90deg,rgba(4,1,2,.82) 0%,rgba(4,1,2,.46) 40%,rgba(4,1,2,.10) 72%,rgba(4,1,2,.42) 100%),
  linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.12) 45%,rgba(0,0,0,.80)),
- url("./warden-background.png") center center/cover no-repeat;
  transform:scale(1.01)
 }
 body::after{
@@ -254,6 +252,11 @@ body::after{
 .card,.notice,.purchase-modal,.account-modal{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 </style>
 
+
+<style>
+html,body{min-height:100%;margin:0;background:#111 url("theme-dark-background.png") center top/cover fixed no-repeat;}
+body.light,html.light{background-image:url("theme-light-background.png");background-size:cover;background-attachment:fixed;}
+</style>
 </head>
 
 <script>
