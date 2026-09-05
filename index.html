@@ -679,6 +679,74 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 
 <script>
 (() => {
+  const basicModal = document.getElementById('basicModal');
+  const openButtons = document.querySelectorAll('.open-basic');
+  if (!basicModal) return;
+
+  const closeBasic = () => {
+    basicModal.classList.remove('show');
+    document.body.style.overflow = '';
+  };
+
+  openButtons.forEach(btn => btn.addEventListener('click', e => {
+    e.preventDefault();
+    basicModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }));
+
+  const closeBtn = basicModal.querySelector('.modal-close');
+  const backdrop = basicModal.querySelector('.modal-backdrop');
+  closeBtn && closeBtn.addEventListener('click', closeBasic);
+  backdrop && backdrop.addEventListener('click', closeBasic);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && basicModal.classList.contains('show')) closeBasic();
+  });
+
+  const slider = document.getElementById('daysSlider');
+  const daysValue = document.getElementById('daysValue');
+  const daysPrice = document.getElementById('daysPrice');
+  const summary = document.getElementById('summaryText');
+  if (slider && daysValue && daysPrice && summary) {
+    const plans = [
+      ['14 дней', '149 ₽'],
+      ['30 дней', '249 ₽'],
+      ['90 дней', '599 ₽'],
+      ['180 дней', '999 ₽'],
+      ['Навсегда', '1499 ₽']
+    ];
+    const update = () => {
+      const [days, price] = plans[Number(slider.value)] || plans[1];
+      daysValue.textContent = days;
+      daysPrice.textContent = price;
+      summary.textContent = `${days} • ${price}`;
+    };
+    slider.addEventListener('input', update);
+    update();
+  }
+
+  const confirm = basicModal.querySelector('.confirm-buy');
+  const accountModal = document.getElementById('accountModal');
+  if (confirm) {
+    confirm.addEventListener('click', () => {
+      closeBasic();
+      if (accountModal) {
+        accountModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        const guest = document.getElementById('authGuest');
+        const profile = document.getElementById('accountProfile');
+        if (guest && profile && !localStorage.getItem('fundlc_session_v1')) {
+          guest.style.display = 'block';
+          profile.style.display = 'none';
+        }
+      }
+    });
+  }
+})();
+</script>
+
+<script>
+(() => {
   const canvas = document.getElementById('particleCanvas');
   const slider = document.getElementById('daysSlider');
   if (!canvas || !slider) return;
