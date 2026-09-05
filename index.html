@@ -280,6 +280,12 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 }
 </style>
 
+
+<style id="png-language-flags-final">
+.flag-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;overflow:hidden;border-radius:2px;flex:none}
+.flag-icon .lang-flag-img,.lang-flag-img{display:block!important;width:22px!important;height:15px!important;min-width:22px!important;min-height:15px!important;max-width:22px!important;max-height:15px!important;object-fit:fill!important;margin:0!important;border-radius:2px}
+.lang-option{display:flex;align-items:center;gap:9px}
+</style>
 </head>
 
 <script>
@@ -329,11 +335,11 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   <div class="nav-tools">
     <button class="ui-tool theme-btn" id="themeToggle" type="button" aria-label="Theme"><svg id="themeIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
     <div class="lang-wrap">
-      <button class="ui-tool lang-btn" id="langToggle" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9S14.5 18.5 12 21M12 3c-2.5 2.5-3.5 5.5-3.5 9S9.5 18.5 12 21"/></svg><span id="currentLang" class="flag-icon" aria-hidden="true"><span class="flag-ru"></span></span></button>
+      <button class="ui-tool lang-btn" id="langToggle" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9S14.5 18.5 12 21M12 3c-2.5 2.5-3.5 5.5-3.5 9S9.5 18.5 12 21"/></svg><span id="currentLang" class="flag-icon" aria-hidden="true"><img class="lang-flag-img" src="flags/ru.png" alt="Russia"></span></span></button>
       <div class="lang-menu" id="langMenu">
-        <button class="lang-option active" data-lang="ru" type="button"><img class="lang-flag-img" src="flags/ru.png" alt="Russia"></span><span>Русский</span></button>
-        <button class="lang-option" data-lang="en" type="button"><img class="lang-flag-img" src="flags/en.png" alt="United Kingdom"></span><span>English</span></button>
-        <button class="lang-option" data-lang="uk" type="button"><img class="lang-flag-img" src="flags/uk.png" alt="Ukraine"></span><span>Українська</span></button>
+        <button class="lang-option active" data-lang="ru" type="button"><img class="lang-flag-img" src="flags/ru.png" alt="Russia"><span>Русский</span></button>
+        <button class="lang-option" data-lang="en" type="button"><img class="lang-flag-img" src="flags/en.png" alt="United Kingdom"><span>English</span></button>
+        <button class="lang-option" data-lang="uk" type="button"><img class="lang-flag-img" src="flags/uk.png" alt="Ukraine"><span>Українська</span></button>
       </div>
     </div>
   </div>
