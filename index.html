@@ -380,7 +380,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 
     <div class="slider-wrap"><canvas class="particle-canvas" id="particleCanvas"></canvas>
       <div class="slider-value"><span id="daysValue">30 дней</span><strong id="daysPrice">249 ₽</strong></div>
-      <input id="daysSlider" type="range" min="0" max="4" step="1" value="1">
+      <input id="daysSlider" type="range" min="0" max="4" step="0.001" value="1">
       <div class="slider-labels">
         <span>14д</span><span>30д</span><span>90д</span><span>180д</span><span>∞</span>
       </div>
@@ -973,61 +973,112 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 })();
 </script>
 
-</body>
+
+
 
 <style id="fundlc-slider-roll-animation">
 #daysSlider{
   cursor:pointer;
-  transition:filter .25s ease, transform .2s ease;
+  transition:filter .35s ease, transform .35s cubic-bezier(.2,.8,.2,1);
+  will-change:filter,transform;
 }
-#daysSlider:active{transform:scaleY(1.08);filter:brightness(1.12);}
+#daysSlider:active{transform:scaleY(1.08);filter:brightness(1.16);}
+#daysSlider::-webkit-slider-thumb{transition:box-shadow .3s ease,transform .3s cubic-bezier(.2,.8,.2,1);}
+#daysSlider:active::-webkit-slider-thumb{transform:scale(1.08);}
+#daysSlider::-moz-range-thumb{transition:box-shadow .3s ease,transform .3s cubic-bezier(.2,.8,.2,1);}
+#daysSlider:active::-moz-range-thumb{transform:scale(1.08);}
 .slider-wrap{overflow:visible}
 </style>
 <script id="fundlc-slider-roll-sound">
 (function(){
   const slider=document.getElementById('daysSlider');
   if(!slider) return;
-  let audioCtx=null, lastValue=slider.value, raf=0, target=+slider.value, current=+slider.value;
+  let audioCtx=null, raf=0, current=parseFloat(slider.value)||1, target=current, dragging=false, lastTick=-1, lastTime=0;
+  const plans=[['14 дней','149 ₽'],['30 дней','249 ₽'],['90 дней','599 ₽'],['180 дней','999 ₽'],['Навсегда','1499 ₽']];
   function ctx(){
     if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
     if(audioCtx.state==='suspended') audioCtx.resume();
     return audioCtx;
   }
-  function tick(){
+  function tick(index){
     try{
       const c=ctx(), o=c.createOscillator(), g=c.createGain();
-      o.type='sine'; o.frequency.setValueAtTime(240+(+slider.value)*55,c.currentTime);
-      o.frequency.exponentialRampToValueAtTime(130+(+slider.value)*35,c.currentTime+.055);
-      g.gain.setValueAtTime(.0001,c.currentTime); g.gain.exponentialRampToValueAtTime(.028,c.currentTime+.006); g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.065);
-      o.connect(g).connect(c.destination); o.start(); o.stop(c.currentTime+.07);
+      const now=c.currentTime;
+      o.type='sine';
+      o.frequency.setValueAtTime(260+index*48,now);
+      o.frequency.exponentialRampToValueAtTime(155+index*25,now+.075);
+      g.gain.setValueAtTime(.0001,now);
+      g.gain.exponentialRampToValueAtTime(.022,now+.008);
+      g.gain.exponentialRampToValueAtTime(.0001,now+.09);
+      o.connect(g).connect(c.destination); o.start(now); o.stop(now+.095);
     }catch(e){}
   }
-  function slowRoll(){
+  function setVisual(v, fire=true){
+    v=Math.max(0,Math.min(4,v));
+    current=v;
+    slider.value=String(v);
+    if(fire) slider.dispatchEvent(new Event('input',{bubbles:true}));
+    const idx=Math.round(v);
+    if(idx!==lastTick){
+      lastTick=idx;
+      const now=performance.now();
+      if(now-lastTime>90){ tick(idx); lastTime=now; }
+    }
+  }
+  function pointerValue(e){
+    const r=slider.getBoundingClientRect();
+    const x=Math.max(r.left,Math.min(r.right,e.clientX));
+    return ((x-r.left)/r.width)*4;
+  }
+  function animate(){
     cancelAnimationFrame(raf);
     function step(){
       const diff=target-current;
-      if(Math.abs(diff)<.015){ current=target; slider.value=String(Math.round(current)); slider.dispatchEvent(new Event('input',{bubbles:true})); return; }
-      current += diff*.13;
-      const v=Math.max(0,Math.min(4,Math.round(current)));
-      slider.value=String(v);
-      slider.dispatchEvent(new Event('input',{bubbles:true}));
+      if(Math.abs(diff)<.002){ setVisual(target); raf=0; return; }
+      // Smooth ease-out movement: fast at first, very soft near the destination.
+      current += diff*.115;
+      setVisual(current);
       raf=requestAnimationFrame(step);
     }
     raf=requestAnimationFrame(step);
   }
-  slider.addEventListener('input',function(){
-    const v=+this.value;
-    if(v!==+lastValue) tick();
-    lastValue=this.value;
+  slider.addEventListener('pointerdown',function(e){
+    dragging=true;
+    try{ctx();}catch(e){}
+    slider.setPointerCapture?.(e.pointerId);
+    target=pointerValue(e);
+    if(e.target===slider){
+      e.preventDefault();
+      animate();
+    }
   });
-  slider.addEventListener('change',function(){
-    target=+this.value;
-    slowRoll();
+  slider.addEventListener('pointermove',function(e){
+    if(!dragging) return;
+    target=pointerValue(e);
   });
-  slider.addEventListener('pointerdown',function(){ try{ctx();}catch(e){} });
+  slider.addEventListener('pointerup',function(){ dragging=false; });
+  slider.addEventListener('pointercancel',function(){ dragging=false; });
+  slider.addEventListener('keydown',function(e){
+    if(['ArrowLeft','ArrowRight','Home','End','PageUp','PageDown'].includes(e.key)){
+      e.preventDefault();
+      if(e.key==='Home') target=0;
+      else if(e.key==='End') target=4;
+      else if(e.key==='ArrowRight') target=Math.min(4,target+.2);
+      else if(e.key==='ArrowLeft') target=Math.max(0,target-.2);
+      else if(e.key==='PageUp') target=Math.min(4,target+1);
+      else if(e.key==='PageDown') target=Math.max(0,target-1);
+      animate();
+    }
+  });
+  // Clicking the track should roll smoothly instead of jumping.
+  slider.addEventListener('click',function(e){
+    if(dragging) return;
+    target=pointerValue(e);
+    animate();
+  });
+  setVisual(current,false);
 })();
 </script>
-</html>
 
 <script>
 (function(){
@@ -1123,3 +1174,6 @@ body.light-theme .hero{background:transparent!important;border-color:rgba(224,11
 body.light-theme .account-modal{background:transparent!important}
 @media(max-width:760px){body{background-attachment:scroll!important}.hero{min-height:620px;margin:16px 14px 0;padding:55px 22px;border-radius:22px}}
 </style>
+
+</body>
+</html>
