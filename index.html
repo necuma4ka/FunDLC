@@ -443,7 +443,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
       </div>
       <div class="purchase-summary"><span data-i18n="status">Статус</span><b data-i18n="active">Аккаунт активен</b></div>
       <div class="cabinet-grid">
-        <div class="cabinet-row"><span data-i18n="uid">UID</span><b id="profileUid">—</b></div>
+        <div class="cabinet-row"><span data-i18n="uid">UUID</span><b id="profileUid">—</b></div>
         <div class="cabinet-row"><span data-i18n="coins">Монеты</span><b id="profileCoins">0</b></div>
         <div class="cabinet-row"><span data-i18n="loginLabel">Логин</span><b id="profileLogin">—</b></div>
         <div class="cabinet-row"><span data-i18n="group">Группа</span><b id="profileGroup">Пользователь</b></div>
@@ -514,14 +514,25 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
     catch(e){ return []; }
   }
   function saveUsers(v){ localStorage.setItem(USERS_KEY, JSON.stringify(v)); }
-  function uid(){ return String(Math.floor(100000+Math.random()*900000)); }
+  function uid(){
+    const list=usersRaw();
+    const nums=list.map(u=>parseInt(u.uid,10)).filter(Number.isFinite);
+    const next=(nums.length?Math.max(...nums)+1:1);
+    return String(next).padStart(3,'0');
+  }
   function usersRaw(){
     try { return JSON.parse(localStorage.getItem(USERS_KEY)||'[]'); }
     catch(e){ return []; }
   }
   function migrateUUIDs(){
     const list=usersRaw(); let changed=false;
-    list.forEach(u=>{ if(!('coins' in u)){u.coins=0;changed=true;} if(!u.avatar){u.avatar=DEFAULT_AVATAR;changed=true;} });
+    let next=1;
+    list.forEach(u=>{
+      if(!u.uid || !/^\d{3}$/.test(String(u.uid))){u.uid=String(next).padStart(3,'0'); changed=true;}
+      next=Math.max(next,parseInt(u.uid,10)+1);
+      if(!('coins' in u)){u.coins=0;changed=true;}
+      if(!u.avatar){u.avatar=DEFAULT_AVATAR;changed=true;}
+    });
     if(changed) localStorage.setItem(USERS_KEY,JSON.stringify(list));
   }
   function now(){
@@ -774,6 +785,8 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   const wrap = canvas.parentElement;
   let particles = [];
   let lastValue = Number(slider.value);
+  let dragging = false;
+  let lastSpawn = 0;
 
   function resize(){
     const dpr = window.devicePixelRatio || 1;
@@ -787,25 +800,29 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   function sliderPoint(){
     const rect = slider.getBoundingClientRect();
     const wrect = wrap.getBoundingClientRect();
-    const progress = Number(slider.value) / Number(slider.max);
+    const min = Number(slider.min) || 0;
+    const max = Number(slider.max) || 1;
+    const progress = (Number(slider.value)-min)/(max-min);
     return {
-      x: (rect.left - wrect.left) + rect.width * progress,
-      y: (rect.top - wrect.top) + rect.height / 2
+      x: (rect.left-wrect.left) + rect.width*progress,
+      y: (rect.top-wrect.top) + rect.height/2 + 7
     };
   }
 
-  function burst(){
-    const p = sliderPoint();
-    for(let i=0;i<26;i++){
-      const a = Math.random() * Math.PI * 2;
-      const speed = 0.5 + Math.random() * 2.2;
+  function spawnParticles(count=7, falling=true){
+    const p=sliderPoint();
+    for(let i=0;i<count;i++){
       particles.push({
-        x:p.x, y:p.y,
-        vx:Math.cos(a)*speed,
-        vy:Math.sin(a)*speed,
+        x:p.x+(Math.random()-.5)*7,
+        y:p.y+Math.random()*3,
+        vx:(Math.random()-.5)*1.15,
+        vy:falling ? .35+Math.random()*1.25 : (Math.random()-.5)*1.2,
+        gravity:.035+Math.random()*.025,
         life:1,
-        size:1.2+Math.random()*2.8,
-        spin:Math.random()*Math.PI
+        decay:.012+Math.random()*.009,
+        size:1.4+Math.random()*3.1,
+        rot:Math.random()*Math.PI,
+        spin:(Math.random()-.5)*.18
       });
     }
   }
@@ -815,16 +832,13 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
     ctx.clearRect(0,0,w,h);
     for(let i=particles.length-1;i>=0;i--){
       const p=particles[i];
-      p.x+=p.vx; p.y+=p.vy; p.vy+=0.018;
-      p.life-=0.018; p.size*=0.992; p.spin+=0.08;
-      if(p.life<=0){particles.splice(i,1);continue}
+      p.x+=p.vx; p.y+=p.vy; p.vy+=p.gravity; p.rot+=p.spin; p.life-=p.decay;
+      if(p.life<=0 || p.y>h+10){particles.splice(i,1);continue;}
       ctx.save();
-      ctx.globalAlpha=p.life*.85;
-      ctx.translate(p.x,p.y);
-      ctx.rotate(p.spin);
+      ctx.globalAlpha=Math.min(1,p.life)*.9;
+      ctx.translate(p.x,p.y); ctx.rotate(p.rot);
       ctx.fillStyle='#ff8a32';
-      ctx.shadowBlur=10;
-      ctx.shadowColor='#ff6a00';
+      ctx.shadowBlur=8; ctx.shadowColor='#ff6a00';
       ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);
       ctx.restore();
     }
@@ -833,11 +847,27 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 
   slider.addEventListener('input',()=>{
     const v=Number(slider.value);
-    if(v!==lastValue){ burst(); lastValue=v; }
+    if(v!==lastValue){
+      spawnParticles(dragging ? 12 : 7, true);
+      lastValue=v;
+    }
+    if(dragging){
+      const now=performance.now();
+      if(now-lastSpawn>42){ spawnParticles(4,true); lastSpawn=now; }
+    }
   });
 
-  slider.addEventListener('pointerdown',burst);
-  burst();
+  slider.addEventListener('pointerdown',()=>{
+    dragging=true;
+    lastSpawn=performance.now();
+    spawnParticles(14,true);
+  });
+  window.addEventListener('pointerup',()=>{
+    if(dragging){ spawnParticles(8,true); dragging=false; }
+  });
+  slider.addEventListener('touchstart',()=>{ dragging=true; spawnParticles(12,true); },{passive:true});
+  slider.addEventListener('touchend',()=>{ dragging=false; spawnParticles(8,true); },{passive:true});
+
   draw();
 })();
 </script>
@@ -847,9 +877,9 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 <script id="fundlc-i18n-theme">
 (() => {
   const I18N={
-    ru:{support:'Поддержка',money:'Деньги за видео',cabinet:'Личный кабинет',buy:'Купить',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Играй по-<span class="tight-hyphen">своему.</span><br><span>FunDLC.</span>',heroText:'Современный Minecraft-клиент с удобным интерфейсом, настройками модулей и акцентом на производительность.',chooseVersion:'Выбрать версию',details:'Подробнее',notice:'Используй сторонние клиенты только там, где это разрешено правилами сервера.',accessTitle:'Выбери доступ',accessSub:'Простые тарифы без лишнего.',basicText:'Основная версия клиента для комфортной игры.',basicF1:'✓ Основные функции клиента',basicF2:'✓ Настраиваемый интерфейс',basicF3:'✓ Регулярные обновления',betaText:'Доступ к Beta-версии клиента. Подписка доступна только навсегда.',betaF1:'✓ Lifetime-доступ',betaF2:'✓ Beta-функции',betaF3:'✓ Будущие обновления Beta',buyBeta:'Купить Beta',whyTitle:'Почему FunDLC?',whySub:'Минимализм, скорость и удобство.',why1Title:'Чистый интерфейс',why1Text:'Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.',why2Title:'Производительность',why2Text:'Оптимизированный интерфейс без ощущения перегруженности.',why3Title:'Гибкие настройки',why3Text:'Настраивай внешний вид и поведение доступных функций под себя.',faqSub:'Частые вопросы.',faq1Q:'Какие версии Minecraft поддерживаются?',faq1A:'Добавь сюда актуальный список версий твоего клиента, например 1.21.x.',faq2Q:'Как происходит покупка?',faq2A:'После подключения платежной системы пользователь сможет оплатить выбранный тариф и получить доступ через личный кабинет.',faq3Q:'Можно ли использовать клиент на любом сервере?',faq3A:'Нет. Всегда проверяй правила конкретного сервера: некоторые сторонние клиенты или отдельные функции запрещены.',chooseTerm:'Выбери срок подписки',termText:'Проведи ползунок и выбери нужный срок.',basicName:'FunDLC Basic',goPurchase:'Перейти к покупке',loginTitle:'Авторизация',loginIntro:'Войди в аккаунт или создай новый.',login:'Войти',register:'Регистрация',loginEmail:'Логин или e-mail',password:'Пароль',remember:'Запомнить меня',nickname:'Никнейм',email:'E-mail',robot:'Я подтверждаю, что я не робот',createAccount:'Создать аккаунт',localDb:'Данные аккаунта и аватар сохраняются в локальной базе браузера. Здесь хранятся данные аккаунта и аватар',changeAvatar:'Изменить аватар',defaultAvatar:'По умолчанию',status:'Статус',active:'Аккаунт активен',uid:'UID',coins:'Монети',loginLabel:'Логин',group:'Группа',registered:'Регистрация',lastLogin:'Последний вход',subscription:'Подписка',logout:'Выйти',loginPlaceholder:'Введите логин или e-mail',passwordPlaceholder:'Введите пароль',nickPlaceholder:'Например, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Минимум 8 символов',passwordAgain:'Повторите пароль'},
-    en:{support:'Support',money:'Money for videos',cabinet:'Account',buy:'Buy',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Play your<br><span>FunDLC.</span>',heroText:'A modern Minecraft client with a clean interface, module settings and a focus on performance.',chooseVersion:'Choose version',details:'Learn more',notice:'Use third-party clients only where the server rules allow them.',accessTitle:'Choose access',accessSub:'Simple plans without the clutter.',basicText:'The main client version for comfortable gameplay.',basicF1:'✓ Core client features',basicF2:'✓ Customizable interface',basicF3:'✓ Regular updates',betaText:'Access to the Beta client. This subscription is lifetime only.',betaF1:'✓ Lifetime access',betaF2:'✓ Beta features',betaF3:'✓ Future Beta updates',buyBeta:'Buy Beta',whyTitle:'Why FunDLC?',whySub:'Minimalism, speed and convenience.',why1Title:'Clean interface',why1Text:'Nothing extra: quick access to settings and a tidy HUD.',why2Title:'Performance',why2Text:'An optimized interface without feeling overloaded.',why3Title:'Flexible settings',why3Text:'Customize the look and behavior of available features.',faqSub:'Frequently asked questions.',faq1Q:'Which Minecraft versions are supported?',faq1A:'Add your client’s current supported versions here, for example 1.21.x.',faq2Q:'How does the purchase work?',faq2A:'After a payment system is connected, users will be able to pay for a plan and receive access through the account.',faq3Q:'Can the client be used on any server?',faq3A:'No. Always check the rules of the specific server: some clients or features may be prohibited.',chooseTerm:'Choose subscription period',termText:'Move the slider and choose the period you need.',basicName:'FunDLC Basic',goPurchase:'Continue to purchase',loginTitle:'Sign in',loginIntro:'Sign in to your account or create a new one.',login:'Sign in',register:'Register',loginEmail:'Login or e-mail',password:'Password',remember:'Remember me',nickname:'Nickname',email:'E-mail',robot:'I confirm that I am not a robot',createAccount:'Create account',localDb:'Account data and avatar are saved in the browser’s local database. Account data and avatar are stored in the browser's local database',changeAvatar:'Change avatar',defaultAvatar:'Default',status:'Status',active:'Account active',uid:'UID',coins:'Монети',loginLabel:'Login',group:'Group',registered:'Registered',lastLogin:'Last login',subscription:'Subscription',logout:'Log out',loginPlaceholder:'Enter login or e-mail',passwordPlaceholder:'Enter password',nickPlaceholder:'For example, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Minimum 8 characters',passwordAgain:'Repeat password'},
-    uk:{support:'Підтримка',money:'Гроші за відео',cabinet:'Особистий кабінет',buy:'Купити',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Грай по-<span class="tight-hyphen">своєму.</span><br><span>FunDLC.</span>',heroText:'Сучасний Minecraft-клієнт зі зручним інтерфейсом, налаштуваннями модулів та акцентом на продуктивність.',chooseVersion:'Обрати версію',details:'Детальніше',notice:'Використовуй сторонні клієнти лише там, де це дозволено правилами сервера.',accessTitle:'Обери доступ',accessSub:'Прості тарифи без зайвого.',basicText:'Основна версія клієнта для комфортної гри.',basicF1:'✓ Основні функції клієнта',basicF2:'✓ Налаштовуваний інтерфейс',basicF3:'✓ Регулярні оновлення',betaText:'Доступ до Beta-версії клієнта. Підписка доступна лише назавжди.',betaF1:'✓ Довічний доступ',betaF2:'✓ Beta-функції',betaF3:'✓ Майбутні оновлення Beta',buyBeta:'Купити Beta',whyTitle:'Чому FunDLC?',whySub:'Мінімалізм, швидкість та зручність.',why1Title:'Чистий інтерфейс',why1Text:'Нічого зайвого: швидкий доступ до налаштувань та акуратний HUD.',why2Title:'Продуктивність',why2Text:'Оптимізований інтерфейс без відчуття перевантаженості.',why3Title:'Гнучкі налаштування',why3Text:'Налаштовуй вигляд та поведінку доступних функцій під себе.',faqSub:'Часті запитання.',faq1Q:'Які версії Minecraft підтримуються?',faq1A:'Додай сюди актуальний список версій твого клієнта, наприклад 1.21.x.',faq2Q:'Як відбувається покупка?',faq2A:'Після підключення платіжної системи користувач зможе оплатити тариф та отримати доступ через особистий кабінет.',faq3Q:'Чи можна використовувати клієнт на будь-якому сервері?',faq3A:'Ні. Завжди перевіряй правила конкретного сервера: деякі клієнти або функції можуть бути заборонені.',chooseTerm:'Обери термін підписки',termText:'Пересунь повзунок та обери потрібний термін.',basicName:'FunDLC Basic',goPurchase:'Перейти до покупки',loginTitle:'Авторизація',loginIntro:'Увійди до акаунта або створи новий.',login:'Увійти',register:'Реєстрація',loginEmail:'Логін або e-mail',password:'Пароль',remember:'Запам’ятати мене',nickname:'Нікнейм',email:'E-mail',robot:'Я підтверджую, що я не робот',createAccount:'Створити акаунт',localDb:'Дані акаунта та аватар зберігаються в локальній базі браузера. UUID видається послідовно: 001, 002, 003...',changeAvatar:'Змінити аватар',defaultAvatar:'За замовчуванням',status:'Статус',active:'Акаунт активний',uid:'UID',coins:'Монети',loginLabel:'Логін',group:'Група',registered:'Реєстрація',lastLogin:'Останній вхід',subscription:'Підписка',logout:'Вийти',loginPlaceholder:'Введи логін або e-mail',passwordPlaceholder:'Введи пароль',nickPlaceholder:'Наприклад, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Мінімум 8 символів',passwordAgain:'Повтори пароль'}
+    ru:{support:'Поддержка',money:'Деньги за видео',cabinet:'Личный кабинет',buy:'Купить',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Играй по-<span class="tight-hyphen">своему.</span><br><span>FunDLC.</span>',heroText:'Современный Minecraft-клиент с удобным интерфейсом, настройками модулей и акцентом на производительность.',chooseVersion:'Выбрать версию',details:'Подробнее',notice:'Используй сторонние клиенты только там, где это разрешено правилами сервера.',accessTitle:'Выбери доступ',accessSub:'Простые тарифы без лишнего.',basicText:'Основная версия клиента для комфортной игры.',basicF1:'✓ Основные функции клиента',basicF2:'✓ Настраиваемый интерфейс',basicF3:'✓ Регулярные обновления',betaText:'Доступ к Beta-версии клиента. Подписка доступна только навсегда.',betaF1:'✓ Lifetime-доступ',betaF2:'✓ Beta-функции',betaF3:'✓ Будущие обновления Beta',buyBeta:'Купить Beta',whyTitle:'Почему FunDLC?',whySub:'Минимализм, скорость и удобство.',why1Title:'Чистый интерфейс',why1Text:'Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.',why2Title:'Производительность',why2Text:'Оптимизированный интерфейс без ощущения перегруженности.',why3Title:'Гибкие настройки',why3Text:'Настраивай внешний вид и поведение доступных функций под себя.',faqSub:'Частые вопросы.',faq1Q:'Какие версии Minecraft поддерживаются?',faq1A:'Добавь сюда актуальный список версий твоего клиента, например 1.21.x.',faq2Q:'Как происходит покупка?',faq2A:'После подключения платежной системы пользователь сможет оплатить выбранный тариф и получить доступ через личный кабинет.',faq3Q:'Можно ли использовать клиент на любом сервере?',faq3A:'Нет. Всегда проверяй правила конкретного сервера: некоторые сторонние клиенты или отдельные функции запрещены.',chooseTerm:'Выбери срок подписки',termText:'Проведи ползунок и выбери нужный срок.',basicName:'FunDLC Basic',goPurchase:'Перейти к покупке',loginTitle:'Авторизация',loginIntro:'Войди в аккаунт или создай новый.',login:'Войти',register:'Регистрация',loginEmail:'Логин или e-mail',password:'Пароль',remember:'Запомнить меня',nickname:'Никнейм',email:'E-mail',robot:'Я подтверждаю, что я не робот',createAccount:'Создать аккаунт',localDb:'Данные аккаунта и аватар сохраняются в локальной базе браузера. Здесь хранятся данные аккаунта и аватар',changeAvatar:'Изменить аватар',defaultAvatar:'По умолчанию',status:'Статус',active:'Аккаунт активен',uid:'UUID',coins:'Монети',loginLabel:'Логин',group:'Группа',registered:'Регистрация',lastLogin:'Последний вход',subscription:'Подписка',logout:'Выйти',loginPlaceholder:'Введите логин или e-mail',passwordPlaceholder:'Введите пароль',nickPlaceholder:'Например, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Минимум 8 символов',passwordAgain:'Повторите пароль'},
+    en:{support:'Support',money:'Money for videos',cabinet:'Account',buy:'Buy',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Play your<br><span>FunDLC.</span>',heroText:'A modern Minecraft client with a clean interface, module settings and a focus on performance.',chooseVersion:'Choose version',details:'Learn more',notice:'Use third-party clients only where the server rules allow them.',accessTitle:'Choose access',accessSub:'Simple plans without the clutter.',basicText:'The main client version for comfortable gameplay.',basicF1:'✓ Core client features',basicF2:'✓ Customizable interface',basicF3:'✓ Regular updates',betaText:'Access to the Beta client. This subscription is lifetime only.',betaF1:'✓ Lifetime access',betaF2:'✓ Beta features',betaF3:'✓ Future Beta updates',buyBeta:'Buy Beta',whyTitle:'Why FunDLC?',whySub:'Minimalism, speed and convenience.',why1Title:'Clean interface',why1Text:'Nothing extra: quick access to settings and a tidy HUD.',why2Title:'Performance',why2Text:'An optimized interface without feeling overloaded.',why3Title:'Flexible settings',why3Text:'Customize the look and behavior of available features.',faqSub:'Frequently asked questions.',faq1Q:'Which Minecraft versions are supported?',faq1A:'Add your client’s current supported versions here, for example 1.21.x.',faq2Q:'How does the purchase work?',faq2A:'After a payment system is connected, users will be able to pay for a plan and receive access through the account.',faq3Q:'Can the client be used on any server?',faq3A:'No. Always check the rules of the specific server: some clients or features may be prohibited.',chooseTerm:'Choose subscription period',termText:'Move the slider and choose the period you need.',basicName:'FunDLC Basic',goPurchase:'Continue to purchase',loginTitle:'Sign in',loginIntro:'Sign in to your account or create a new one.',login:'Sign in',register:'Register',loginEmail:'Login or e-mail',password:'Password',remember:'Remember me',nickname:'Nickname',email:'E-mail',robot:'I confirm that I am not a robot',createAccount:'Create account',localDb:'Account data and avatar are saved in the browser’s local database. Account data and avatar are stored in the browser's local database',changeAvatar:'Change avatar',defaultAvatar:'Default',status:'Status',active:'Account active',uid:'UUID',coins:'Монети',loginLabel:'Login',group:'Group',registered:'Registered',lastLogin:'Last login',subscription:'Subscription',logout:'Log out',loginPlaceholder:'Enter login or e-mail',passwordPlaceholder:'Enter password',nickPlaceholder:'For example, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Minimum 8 characters',passwordAgain:'Repeat password'},
+    uk:{support:'Підтримка',money:'Гроші за відео',cabinet:'Особистий кабінет',buy:'Купити',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Грай по-<span class="tight-hyphen">своєму.</span><br><span>FunDLC.</span>',heroText:'Сучасний Minecraft-клієнт зі зручним інтерфейсом, налаштуваннями модулів та акцентом на продуктивність.',chooseVersion:'Обрати версію',details:'Детальніше',notice:'Використовуй сторонні клієнти лише там, де це дозволено правилами сервера.',accessTitle:'Обери доступ',accessSub:'Прості тарифи без зайвого.',basicText:'Основна версія клієнта для комфортної гри.',basicF1:'✓ Основні функції клієнта',basicF2:'✓ Налаштовуваний інтерфейс',basicF3:'✓ Регулярні оновлення',betaText:'Доступ до Beta-версії клієнта. Підписка доступна лише назавжди.',betaF1:'✓ Довічний доступ',betaF2:'✓ Beta-функції',betaF3:'✓ Майбутні оновлення Beta',buyBeta:'Купити Beta',whyTitle:'Чому FunDLC?',whySub:'Мінімалізм, швидкість та зручність.',why1Title:'Чистий інтерфейс',why1Text:'Нічого зайвого: швидкий доступ до налаштувань та акуратний HUD.',why2Title:'Продуктивність',why2Text:'Оптимізований інтерфейс без відчуття перевантаженості.',why3Title:'Гнучкі налаштування',why3Text:'Налаштовуй вигляд та поведінку доступних функцій під себе.',faqSub:'Часті запитання.',faq1Q:'Які версії Minecraft підтримуються?',faq1A:'Додай сюди актуальний список версій твого клієнта, наприклад 1.21.x.',faq2Q:'Як відбувається покупка?',faq2A:'Після підключення платіжної системи користувач зможе оплатити тариф та отримати доступ через особистий кабінет.',faq3Q:'Чи можна використовувати клієнт на будь-якому сервері?',faq3A:'Ні. Завжди перевіряй правила конкретного сервера: деякі клієнти або функції можуть бути заборонені.',chooseTerm:'Обери термін підписки',termText:'Пересунь повзунок та обери потрібний термін.',basicName:'FunDLC Basic',goPurchase:'Перейти до покупки',loginTitle:'Авторизація',loginIntro:'Увійди до акаунта або створи новий.',login:'Увійти',register:'Реєстрація',loginEmail:'Логін або e-mail',password:'Пароль',remember:'Запам’ятати мене',nickname:'Нікнейм',email:'E-mail',robot:'Я підтверджую, що я не робот',createAccount:'Створити акаунт',localDb:'Дані акаунта та аватар зберігаються в локальній базі браузера. UUID видається послідовно: 001, 002, 003...',changeAvatar:'Змінити аватар',defaultAvatar:'За замовчуванням',status:'Статус',active:'Акаунт активний',uid:'UUID',coins:'Монети',loginLabel:'Логін',group:'Група',registered:'Реєстрація',lastLogin:'Останній вхід',subscription:'Підписка',logout:'Вийти',loginPlaceholder:'Введи логін або e-mail',passwordPlaceholder:'Введи пароль',nickPlaceholder:'Наприклад, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Мінімум 8 символів',passwordAgain:'Повтори пароль'}
   };
   const langKey='fundlc_lang_v1',themeKey='fundlc_theme_v1';
   const langToggle=document.getElementById('langToggle'),langMenu=document.getElementById('langMenu'),currentLang=document.getElementById('currentLang'),themeToggle=document.getElementById('themeToggle'),themeIcon=document.getElementById('themeIcon');
