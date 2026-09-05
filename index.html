@@ -290,8 +290,8 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 .basic-diamond-icon,
 .beta-netherite-icon{
   width:100%;
-  height:205px;
-  margin:0 0 20px;
+  height:155px;
+  margin:0 0 18px;
   border-radius:14px;
   display:grid;
   place-items:center;
@@ -329,8 +329,12 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 35%,rgba(0,0,0,.12));
 }
 @media(max-width:760px){
-  .basic-diamond-icon,.beta-netherite-icon{height:180px}
+  .basic-diamond-icon,.beta-netherite-icon{height:135px}
 }
+
+/* Keep the BETA badge fully visible above the crystal artwork. */
+.card.featured .tag{z-index:10;top:10px;right:10px}
+.card.featured .beta-netherite-icon{margin-top:18px}
 </style>
 </head>
 
