@@ -251,19 +251,12 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 </style>
 <style id="png-language-flags-final">
 .flag-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;overflow:hidden;border-radius:2px;flex:none}
-.flag-icon .lang-flag-img,.lang-flag-img{display:block!important;width:22px!important;height:15px!important;min-width:22px!important;min-height:15px!important;max-width:22px!important;max-height:15px!important;object-fit:fill!important;margin:0!important;border-radius:2px;border:1px solid #ffffff22}
+.flag-icon .lang-flag-img,.lang-flag-img{display:block!important;width:22px!important;height:15px!important;min-width:22px!important;min-height:15px!important;max-width:22px!important;max-height:15px!important;object-fit:fill!important;margin:0!important;border-radius:2px;border:1px solid #ffffff22;filter:none!important;opacity:1!important;visibility:visible!important;mix-blend-mode:normal!important}
 .lang-option{display:flex;align-items:center;gap:9px;min-height:38px}
 </style>
 </head>
 
-<script>
-/* Local PNG language flags: no external icon/emoji dependency. */
-document.addEventListener('error', function(e){
-  if(e.target && e.target.classList && e.target.classList.contains('lang-flag-img')){
-    e.target.style.visibility='hidden';
-  }
-}, true);
-</script>
+<script>/* Flags are embedded locally as PNG data URLs for reliable rendering. */</script>
 
 <script>
 /* FunDLC — persistent account session for GitHub Pages */
@@ -312,18 +305,18 @@ document.addEventListener('error', function(e){
   <div class="nav-tools">
     <button class="ui-tool theme-btn" id="themeToggle" type="button" aria-label="Theme"><svg id="themeIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
     <div class="lang-wrap">
-      <button class="ui-tool lang-btn" id="langToggle" type="button"><img id="currentLangFlag" class="lang-flag-img current-lang-flag" src="./flags/ru.png" alt="Русский" width="64" height="44" decoding="async"><span id="currentLang">RU</span></button>
+      <button class="ui-tool lang-btn" id="langToggle" type="button"><img id="currentLangFlag" class="lang-flag-img current-lang-flag" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAAAUUlEQVR42u3WQREAIAwDwRYhGEABhnGEnuKBH8Oeg518klUVL9fi8QAAAAAAAAAAfgZkzGUBAAAAAAAAAAAAgLs7vUe3AAAAAAAAAAAAAMBVBydTBVC3f+JyAAAAAElFTkSuQmCC" alt="Русский" width="64" height="44" decoding="async"><span id="currentLang">RU</span></button>
       <div class="lang-menu" id="langMenu">
         <button class="lang-option active" data-lang="ru" type="button">
-          <img class="lang-flag-img" src="./flags/ru.png" alt="Флаг России" width="64" height="44" decoding="async">
+          <img class="lang-flag-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAAAUUlEQVR42u3WQREAIAwDwRYhGEABhnGEnuKBH8Oeg518klUVL9fi8QAAAAAAAAAAfgZkzGUBAAAAAAAAAAAAgLs7vUe3AAAAAAAAAAAAAMBVBydTBVC3f+JyAAAAAElFTkSuQmCC" alt="Флаг России" width="64" height="44" decoding="async">
           <span>Русский</span>
         </button>
         <button class="lang-option" data-lang="en" type="button">
-          <img class="lang-flag-img" src="./flags/en.png" alt="Flag of the United Kingdom" width="64" height="44" decoding="async">
+          <img class="lang-flag-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAABzklEQVR42u1ZwXGEMAw0HhUQSggF5J5MJhXlCkpHmeSeNJAW6CDk4YujA5+QLJmYGfRgDBh5VyvbCJrPhyf3a/04xLbvzi7Lvr/eQuPSnvD16FzvGTuH4Dech2O4EnpnD2ZrSejXcCxjj3vgJytE75yDmcRVSUFDv1EgOQ0u7Sk+tr0UHPQ3CiSlwGpsJgUTelqBpBTYUWkpROj7cQD69pZSiKBHeMDph92VoJEH/ZpCvjuvgujHYZlRYSR9RqnQd2eIrVUos4wKbY0UGuhxRI/POSCspFAGPkJtmsdXwjVhy1HvLVzJu8rAR0sQ4NNIDh/HWyXAWSUJ6Hc3MtybprGcFUzLyBnxRsZ/9U3mhgb9bNGjMazvA0WlyA783xyYpqnQSwFnEuvNu53b7gk0uCY+FDgIHAR2OImPfeBIIZ0Bs5Li1x8ZqUI4fG5fVgiIoFu9sdHfDbB9jO80DS8KvLQEEXEgng00ZApIA2+yyGRIASY5Y7hE0qXFkgbYfizgFNP6CgnT8Bi6Hr1g/VYXq4EGWAU+Zw+ykMJvHHhzKeAfoZtIARmrZKF/HEwa85980u2p9B8a6adyqAd6nhS+NvRSKaBC6CIpfLXomRh+AErJfwKNrFGsAAAAAElFTkSuQmCC" alt="Flag of the United Kingdom" width="64" height="44" decoding="async">
           <span>English</span>
         </button>
         <button class="lang-option" data-lang="uk" type="button">
-          <img class="lang-flag-img" src="./flags/uk.png" alt="Прапор України" width="64" height="44" decoding="async">
+          <img class="lang-flag-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAAAR0lEQVR42u3RAQ0AIAwEsR82kYoO9IAMstBz0FxlrnRupHkAAAAAAAAAAAAAAAAAAL8C6mwHAAAAAAAAAAAAAAAAAAAAHnQBGs4DQRlqAPgAAAAASUVORK5CYII=" alt="Прапор України" width="64" height="44" decoding="async">
           <span>Українська</span>
         </button>
       </div>
@@ -910,7 +903,7 @@ document.addEventListener('error', function(e){
     if(current){
       current.textContent=({ru:'RU',en:'EN',uk:'UA'}[lang]||'RU');
       const flag=$('currentLangFlag');
-      const flagData={ru:['./flags/ru.png','Русский'],en:['./flags/en.png','English'],uk:['./flags/uk.png','Українська']}[lang]||['./flags/ru.png','Русский'];
+      const flagData={ru:['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAAAUUlEQVR42u3WQREAIAwDwRYhGEABhnGEnuKBH8Oeg518klUVL9fi8QAAAAAAAAAAfgZkzGUBAAAAAAAAAAAAgLs7vUe3AAAAAAAAAAAAAMBVBydTBVC3f+JyAAAAAElFTkSuQmCC','Русский'],en:['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAABzklEQVR42u1ZwXGEMAw0HhUQSggF5J5MJhXlCkpHmeSeNJAW6CDk4YujA5+QLJmYGfRgDBh5VyvbCJrPhyf3a/04xLbvzi7Lvr/eQuPSnvD16FzvGTuH4Dech2O4EnpnD2ZrSejXcCxjj3vgJytE75yDmcRVSUFDv1EgOQ0u7Sk+tr0UHPQ3CiSlwGpsJgUTelqBpBTYUWkpROj7cQD69pZSiKBHeMDph92VoJEH/ZpCvjuvgujHYZlRYSR9RqnQd2eIrVUos4wKbY0UGuhxRI/POSCspFAGPkJtmsdXwjVhy1HvLVzJu8rAR0sQ4NNIDh/HWyXAWSUJ6Hc3MtybprGcFUzLyBnxRsZ/9U3mhgb9bNGjMazvA0WlyA783xyYpqnQSwFnEuvNu53b7gk0uCY+FDgIHAR2OImPfeBIIZ0Bs5Li1x8ZqUI4fG5fVgiIoFu9sdHfDbB9jO80DS8KvLQEEXEgng00ZApIA2+yyGRIASY5Y7hE0qXFkgbYfizgFNP6CgnT8Bi6Hr1g/VYXq4EGWAU+Zw+ykMJvHHhzKeAfoZtIARmrZKF/HEwa85980u2p9B8a6adyqAd6nhS+NvRSKaBC6CIpfLXomRh+AErJfwKNrFGsAAAAAElFTkSuQmCC','English'],uk:['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAAAR0lEQVR42u3RAQ0AIAwEsR82kYoO9IAMstBz0FxlrnRupHkAAAAAAAAAAAAAAAAAAL8C6mwHAAAAAAAAAAAAAAAAAAAAHnQBGs4DQRlqAPgAAAAASUVORK5CYII=','Українська']}[lang]||['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAsCAIAAABaPSmoAAAAUUlEQVR42u3WQREAIAwDwRYhGEABhnGEnuKBH8Oeg518klUVL9fi8QAAAAAAAAAAfgZkzGUBAAAAAAAAAAAAgLs7vUe3AAAAAAAAAAAAAMBVBydTBVC3f+JyAAAAAElFTkSuQmCC','Русский'];
       if(flag){ flag.src=flagData[0]; flag.alt=flagData[1]; }
     }
     try{localStorage.setItem(langKey,lang);}catch(e){}
