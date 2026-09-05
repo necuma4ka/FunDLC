@@ -121,6 +121,24 @@ html,body{font-family:Inter,Arial,sans-serif}
 @media(max-width:760px){.links{gap:4px}.links>a:not(.nav-buy),.nav-link{font-size:9px;padding:8px 6px}.nav{padding:0 4%}.nav .logo{font-size:18px}}
 
 .auth-tabs{display:flex;gap:6px;background:#0a0c10;border:1px solid #252933;border-radius:11px;padding:4px;margin:0 0 18px}.auth-tab{flex:1;border:0;background:transparent;color:#777d88;padding:11px;border-radius:8px;cursor:pointer;font:inherit}.auth-tab.active{background:#ff6a00;color:#160b03}.auth-error{display:none;background:#2a1010;border:1px solid #612525;color:#ff9b9b;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:14px}.auth-success{background:#102718;border-color:#245d34;color:#9ff0b3}.auth-field{margin-bottom:12px}.auth-field:last-of-type{margin-bottom:16px}.auth-meta{font-size:11px;color:#666b76;line-height:1.6;margin-top:10px}.cabinet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.cabinet-row{display:flex;justify-content:space-between;gap:10px;border:1px solid #252933;background:#0d1015;border-radius:10px;padding:11px 12px;font-size:11px}.cabinet-row span{color:#777d88}.cabinet-row b{color:#eee;text-align:right;overflow:hidden;text-overflow:ellipsis}.danger{border-color:#572424!important;color:#ff9b9b!important}.account-modal{width:min(560px,100%)}@media(max-width:520px){.cabinet-grid{grid-template-columns:1fr}}
+
+/* Full-screen FunDLC account page */
+.account-modal{width:100vw!important;max-width:none!important;height:100vh!important;min-height:100vh;border:0!important;border-radius:0!important;padding:0!important;background:radial-gradient(circle at 50% -10%,#2a1609 0,#08090d 45%,#050609 100%)!important;overflow:auto;animation:accountPageIn .22s ease}
+.account-modal .modal-badge,.account-modal #authTitle,.account-modal #accountIntro,.account-modal #authGuest,.account-modal #accountProfile{width:min(980px,calc(100% - 40px));margin-left:auto;margin-right:auto}
+.account-modal .modal-badge{display:block;margin-top:90px;margin-bottom:18px;width:max-content;margin-left:max(20px,calc((100% - 980px)/2))}
+.account-modal #authTitle{font-size:clamp(34px,5vw,58px);letter-spacing:-2px;margin-top:0;margin-bottom:10px}
+.account-modal #accountIntro{color:#8d929d;font-size:15px;margin-bottom:30px}
+.account-modal #authGuest{background:linear-gradient(180deg,#111319ee,#0b0d12ee);border:1px solid #2a2e37;border-radius:22px;padding:28px;box-shadow:0 30px 90px #0009}
+.account-modal #accountProfile{padding:0 0 70px}
+.account-profile{background:linear-gradient(135deg,#18130f,#0e1116);border:1px solid #3b2a1e;border-radius:22px;padding:26px;min-height:105px;box-shadow:0 20px 70px #0008}
+.profile-avatar{width:62px;height:62px;border-radius:14px;font-size:25px}
+.account-profile strong{font-size:20px}.account-profile span{font-size:12px}
+.cabinet-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}.cabinet-row{min-height:70px;align-items:center;border-radius:14px;padding:15px 17px;font-size:12px;background:#0d1016cc}.cabinet-row span{font-size:11px;text-transform:uppercase;letter-spacing:.6px}.cabinet-row b{font-size:13px}
+.account-modal .purchase-summary{border-radius:14px;padding:16px 17px;background:#0d1016cc;border:1px solid #252933}.account-modal #logoutAccount{margin-top:12px;min-height:50px}
+.account-modal .modal-close{position:fixed;left:22px;top:20px;right:auto;z-index:30;border:1px solid #30343e;background:#11141a;color:#dfe2e8;border-radius:10px;padding:10px 15px;font-size:12px;font-family:inherit}.account-modal .modal-close:hover{background:#1a1d24;color:#fff;border-color:#4a4f5b}
+@keyframes accountPageIn{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:none}}
+@media(max-width:700px){.account-modal .modal-badge{margin-left:20px;margin-top:82px}.account-modal #authTitle,.account-modal #accountIntro,.account-modal #authGuest,.account-modal #accountProfile{width:calc(100% - 28px)}.cabinet-grid{grid-template-columns:1fr}.account-modal #authGuest{padding:18px}}
+
 </style>
 
 <style id="minecraft-font-force">
@@ -236,7 +254,7 @@ button, input, textarea, select, option {
 <div class="modal" id="accountModal">
   <div class="modal-backdrop account-backdrop"></div>
   <div class="purchase-modal account-modal">
-    <button class="modal-close account-close" aria-label="Закрыть">×</button>
+    <button class="modal-close account-close" aria-label="Вернуться на главную">← На главную</button>
     <div class="modal-badge">FUN DLC ACCOUNT</div>
     <h2 id="authTitle">Авторизация</h2>
     <p id="accountIntro">Войди в аккаунт или создай новый.</p>
@@ -262,7 +280,7 @@ button, input, textarea, select, option {
         <div class="auth-field"><label class="account-label">Повторите пароль</label><input class="account-input" id="regPassword2" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Повторите пароль" required></div>
         <label style="display:flex;gap:8px;align-items:flex-start;color:#c7cad2;font-size:11px;line-height:1.5;margin:2px 0 16px"><input id="robotCheck" type="checkbox" required> Я подтверждаю, что я не робот</label>
         <button class="btn primary full" type="submit">Создать аккаунт</button>
-        <div class="auth-meta">Пароль хранится на сервере только в виде безопасного хэша. UUID аккаунта создаётся автоматически.</div>
+        <div class="auth-meta">Данные аккаунта сохраняются в браузере. UUID выдаётся последовательно: 001, 002, 003...</div>
       </form>
     </div>
 
@@ -312,15 +330,25 @@ button, input, textarea, select, option {
   }
   function saveUsers(v){ localStorage.setItem(USERS_KEY, JSON.stringify(v)); }
   function uid(){ return String(Math.floor(100000+Math.random()*900000)); }
-  function uuid(){
-    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
-      const r=Math.random()*16|0, v=c==='x'?r:(r&3|8); return v.toString(16);
-    });
+  function usersRaw(){
+    try { return JSON.parse(localStorage.getItem(USERS_KEY)||'[]'); }
+    catch(e){ return []; }
+  }
+  function migrateUUIDs(){
+    const list=usersRaw(); let changed=false;
+    list.forEach((u,i)=>{ const wanted=String(i+1).padStart(3,'0'); if(u.uuid!==wanted){u.uuid=wanted;changed=true;} });
+    if(changed) localStorage.setItem(USERS_KEY,JSON.stringify(list));
+  }
+  function uuid(list){
+    let max=0;
+    list.forEach(u=>{const n=Number.parseInt(String(u.uuid||''),10);if(Number.isInteger(n))max=Math.max(max,n);});
+    return String(max+1).padStart(3,'0');
   }
   function now(){
     return new Date().toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
   }
+  migrateUUIDs();
+
   function showError(msg,success=false){
     error.textContent=msg;
     error.classList.toggle('auth-success',success);
@@ -410,7 +438,7 @@ button, input, textarea, select, option {
       if(list.some(u=>u.login.toLowerCase()===login.toLowerCase())) throw new Error('Этот логин уже занят.');
       if(list.some(u=>u.email.toLowerCase()===email)) throw new Error('Этот email уже зарегистрирован.');
       const t=now();
-      const a={uid:uid(),uuid:uuid(),login,email,password:regPassword.value,group:'Пользователь',created_at:t,last_login:t,plan:'Нет подписки'};
+      const a={uid:uid(),uuid:uuid(list),login,email,password:regPassword.value,group:'Пользователь',created_at:t,last_login:t,plan:'Нет подписки'};
       list.push(a); saveUsers(list); localStorage.setItem(SESSION_KEY,a.uid); renderAccount(a);
     }catch(err){ showError(err.message); }
     finally{ btn.disabled=false; }
