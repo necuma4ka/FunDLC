@@ -158,6 +158,7 @@ html{scroll-behavior:smooth}
 
 /* Block icons: transparent background */
 img[src*="gold_block_icon"], img[src*="diamond_block_icon"] { background: transparent !important; }
+.card.subscription .price{text-align:center;}
 </style>
 
 
@@ -195,6 +196,7 @@ html,body{background:#07080b}
 .avatar-reset{color:#b9bdc7!important;background:#10131a!important}
 .avatar-actions .avatar-reset:hover{color:#fff!important}
 @media(max-width:700px){.account-profile{flex-wrap:wrap}.profile-main{min-width:calc(100% - 94px)}.avatar-actions{width:100%;flex-direction:row;margin-left:0}.avatar-actions .avatar-btn{flex:1}}
+.card.subscription .price{text-align:center;}
 </style>
 
 
@@ -238,11 +240,13 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 #logoutAccount::before{content:'';width:16px;height:16px;margin-right:8px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' d='M10 17l5-5-5-5M15 12H3M21 3v18'/%3E%3C/svg%3E") center/contain no-repeat}
 @media(max-width:900px){.nav{padding:0 4%}.links{gap:5px}.links>a:not(.nav-buy),.nav-link{padding:8px 7px}.nav-tools{margin-left:2px}}
 @media(max-width:760px){.links>a:not(.nav-buy),.nav-link{display:none}.nav-tools{margin-left:auto}.logo{font-size:20px}}
+.card.subscription .price{text-align:center;}
 </style>
 <style id="png-language-flags-final">
 .flag-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:15px;overflow:hidden;border-radius:2px;flex:none}
 .flag-icon .lang-flag-img,.lang-flag-img{display:block!important;width:22px!important;height:15px!important;min-width:22px!important;min-height:15px!important;max-width:22px!important;max-height:15px!important;object-fit:fill!important;margin:0!important;border-radius:2px;border:1px solid #ffffff22;filter:none!important;opacity:1!important;visibility:visible!important;mix-blend-mode:normal!important}
 .lang-option{display:flex;align-items:center;gap:9px;min-height:38px}
+.card.subscription .price{text-align:center;}
 </style>
 
 <style id="crystal-icon-final">
@@ -274,6 +278,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   .card.subscription > .basic-diamond-icon,
   .card.subscription > .beta-netherite-icon{margin-bottom:14px}
 }
+.card.subscription .price{text-align:center;}
 </style>
 
 <style id="product-images-fix">
@@ -288,6 +293,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
   opacity:1!important;
   visibility:visible!important;
 }
+.card.subscription .price{text-align:center;}
 </style>
 
 <style id="fundlc-hero-stats">
@@ -297,10 +303,16 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 .hero-stat span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
 body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--line);box-shadow:0 12px 30px rgba(30,38,55,.08)}
 @media(max-width:520px){.hero-stats{gap:8px}.hero-stat{min-width:135px;padding:11px 14px}.hero-stat strong{font-size:16px}}
+.card.subscription .price{text-align:center;}
 </style>
-<style id="fundlc-faq-style">.faq details{position:relative;margin:0 0 12px;padding:0;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025);overflow:hidden;transition:.25s}.faq details:hover{border-color:#ff9a4a55;transform:translateY(-1px)}.faq summary{list-style:none;position:relative;padding:19px 54px 19px 20px;font-size:15px;line-height:1.45;cursor:pointer;font-weight:800;transition:.2s}.faq summary::-webkit-details-marker{display:none}.faq summary::after{content:'+';position:absolute;right:19px;top:50%;transform:translateY(-50%);width:27px;height:27px;border-radius:9px;display:grid;place-items:center;color:var(--accent);border:1px solid #ff8a2a55;background:#ff8a2a10;font-size:20px;font-weight:500}.faq details[open] summary{color:var(--accent);background:#ff8a2a08}.faq details[open] summary::after{content:'−';transform:translateY(-50%) rotate(180deg)}.faq p{margin:0;padding:0 20px 20px;color:var(--muted);line-height:1.7;font-size:14px}body.light-theme .faq details{background:#fff;border-color:#eadfd7;box-shadow:0 8px 28px rgba(255,106,0,.06)}body.light-theme .faq details:hover{border-color:#ffb06b;box-shadow:0 10px 30px rgba(255,106,0,.11)}body.light-theme .faq summary{color:#4a3d35}body.light-theme .faq details[open] summary{color:#f47b20;background:#fff7f0}body.light-theme .faq summary::after{color:#f47b20;border-color:#ffb06b;background:#fff3e8}body.light-theme .faq p{color:#68707c}body.light-theme .footer{color:#8b7d73}body.light-theme .footer div:last-child{color:#f47b20;font-weight:700}</style></head>
+<style id="fundlc-faq-style">.faq details{position:relative;margin:0 0 12px;padding:0;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025);overflow:hidden;transition:.25s}.faq details:hover{border-color:#ff9a4a55;transform:translateY(-1px)}.faq summary{list-style:none;position:relative;padding:19px 54px 19px 20px;font-size:15px;line-height:1.45;cursor:pointer;font-weight:800;transition:.2s}.faq summary::-webkit-details-marker{display:none}.faq summary::after{content:'+';position:absolute;right:19px;top:50%;transform:translateY(-50%);width:27px;height:27px;border-radius:9px;display:grid;place-items:center;color:var(--accent);border:1px solid #ff8a2a55;background:#ff8a2a10;font-size:20px;font-weight:500}.faq details[open] summary{color:var(--accent);background:#ff8a2a08}.faq details[open] summary::after{content:'−';transform:translateY(-50%) rotate(180deg)}.faq p{margin:0;padding:0 20px 20px;color:var(--muted);line-height:1.7;font-size:14px}body.light-theme .faq details{background:#fff;border-color:#eadfd7;box-shadow:0 8px 28px rgba(255,106,0,.06)}body.light-theme .faq details:hover{border-color:#ffb06b;box-shadow:0 10px 30px rgba(255,106,0,.11)}body.light-theme .faq summary{color:#4a3d35}body.light-theme .faq details[open] summary{color:#f47b20;background:#fff7f0}body.light-theme .faq summary::after{color:#f47b20;border-color:#ffb06b;background:#fff3e8}body.light-theme .faq p{color:#68707c}body.light-theme .footer{color:#8b7d73}body.light-theme .footer div:last-child{color:#f47b20;font-weight:700}.card.subscription .price{text-align:center;}
+</style></head>
 
-<script>/* Flags are embedded locally as PNG data URLs for reliable rendering. */</script>
+<script>
+const LAUNCH_DATE='2026-09-05';
+const DATA_FILE='data.json';
+function daysSinceLaunch(){const start=new Date(LAUNCH_DATE+'T00:00:00');return Math.max(0,Math.floor((Date.now()-start.getTime())/86400000));}
+/* Flags are embedded locally as PNG data URLs for reliable rendering. */</script>
 
 <script>
 /* FunDLC — persistent account session for GitHub Pages */
@@ -373,8 +385,8 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
   <h1 data-i18n-html="heroTitle">Играй по-<span class="tight-hyphen">своему.</span><br><span>FunDLC.</span></h1>
   <p data-i18n="heroText">Современный Minecraft-клиент с удобным интерфейсом, настройками модулей и акцентом на производительность.</p>
   <div class="hero-stats" aria-label="Статистика FunDLC">
-    <div class="hero-stat"><strong>1 500+</strong><span>пользователей</span></div>
-    <div class="hero-stat"><strong>180</strong><span>дней работы</span></div>
+    <div class="hero-stat"><strong id="userCount">0</strong><span>пользователей</span></div>
+    <div class="hero-stat"><strong id="daysCount">0</strong><span>дней работы</span></div>
   </div>
   <div class="actions"><a class="btn primary" href="#clients" data-i18n="chooseVersion">Выбрать версию</a><a class="btn" href="#why" data-i18n="details">Подробнее</a></div>
   <div class="notice" data-i18n="notice">Используй сторонние клиенты только там, где это разрешено правилами сервера.</div>
@@ -393,7 +405,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
         <div data-i18n="basicF2">✓ Настраиваемый интерфейс</div>
         <div data-i18n="basicF3">✓ Регулярные обновления</div>
       </div>
-      <div class="price">от 149р <small>/ навсегда</small></div>
+      <div class="price">от 149р <small>/ 14 дней</small></div>
       <button class="btn primary full buy-btn open-basic" data-i18n="buy">Купить</button>
     </article>
 
@@ -571,6 +583,12 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
   };
 
   const USERS_KEY='fundlc_users_v1';
+let sharedData={users:[]};
+async function loadSharedData(){try{const r=await fetch(DATA_FILE,{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&Array.isArray(d.users))sharedData=d;}}catch(e){}
+  const el=document.getElementById('userCount'); if(el) el.textContent=sharedData.users.length.toLocaleString('ru-RU')+'+';
+  const dc=document.getElementById('daysCount'); if(dc) dc.textContent=daysSinceLaunch();
+}
+loadSharedData();
   const SESSION_KEY='fundlc_session_v1';
 
   function users(){
@@ -1124,6 +1142,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
 .slider-labels span.active{color:#ff8a32;transform:translateY(-1px);text-shadow:0 0 10px #ff6a0055}
 .slider-value.bump{animation:valueBump .22s cubic-bezier(.22,1,.36,1)}
 @keyframes valueBump{0%{opacity:.7;transform:translateY(3px)}100%{opacity:1;transform:translateY(0)}}
+.card.subscription .price{text-align:center;}
 </style>
 
 
@@ -1223,6 +1242,7 @@ body.light-theme .beta-only{color:#e89a63!important}
 .modal-close:hover{color:#ff3b30!important}
 body.light-theme .account-modal .modal-close:hover{color:#ff3b30!important}
 @media(max-width:760px){body{background-attachment:scroll!important}.hero{min-height:620px;margin:16px 14px 0;padding:55px 22px;border-radius:22px}}
+.card.subscription .price{text-align:center;}
 </style>
 
 <script id="nav-buy-scroll-fix">
@@ -1255,9 +1275,11 @@ body.light-theme .hero-stat strong,body.light-theme .hero-stat span{color:#b96a3
 .price{white-space:nowrap}
 body.light-theme .beta-only{color:#e89a63!important}
 .modal-close:hover{color:#ff3b30!important}
+.card.subscription .price{text-align:center;}
 </style>
 
 <style id="fundlc-slider-final">
 .slider-progress,.slider-shine{transition-property:width,left;transition-duration:.08s;transition-timing-function:linear}
 .slider-value{transition:transform .16s cubic-bezier(.22,1,.36,1)}
+.card.subscription .price{text-align:center;}
 </style>
