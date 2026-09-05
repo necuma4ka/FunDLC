@@ -1208,3 +1208,34 @@ body.light-theme .account-modal{background:transparent!important}
 </script>
 </body>
 </html>
+<style id="final-card-icon-layout">
+/* Balanced card icon area: full-width stage keeps the blocks centered and leaves room for the card text. */
+.card.subscription > .basic-diamond-icon,
+.card.subscription > .beta-netherite-icon{
+  width:100% !important;
+  height:158px !important;
+  min-height:158px !important;
+  margin:0 0 14px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:14px !important;
+  background:linear-gradient(180deg,#0f1217,#0b0d11) !important;
+  border:1px solid #20242c !important;
+  overflow:hidden !important;
+}
+.card.subscription > .basic-diamond-icon img,
+.card.subscription > .beta-netherite-icon img{
+  width:128px !important;
+  height:128px !important;
+  padding:0 !important;
+  object-fit:contain !important;
+  flex:0 0 auto !important;
+}
+@media(max-width:760px){
+  .card.subscription > .basic-diamond-icon,
+  .card.subscription > .beta-netherite-icon{height:145px !important;min-height:145px !important}
+  .card.subscription > .basic-diamond-icon img,
+  .card.subscription > .beta-netherite-icon img{width:116px !important;height:116px !important}
+}
+</style>
