@@ -1,10 +1,11 @@
-# FunDLC — Mangrove Minecraft background
+# FunDLC — FINAL WARDEN + LANGUAGE + THEME
 
-Добавлен чистый мультяшный Minecraft-inspired фон мангрового биома с лягушками.
-На изображении нет текста или элементов интерфейса.
+Эта версия объединяет:
+- 🇷🇺 Русский / 🇬🇧 English / 🇺🇦 Українська;
+- 🌙 тёмную / ☀️ светлую тему;
+- сохранение языка и темы в localStorage;
+- тёмно-красный Minecraft-style фон с Варденом;
+- аватар по умолчанию;
+- Minecraft-шрифт.
 
-Файлы:
-- index.html
-- mangrove-background.png
-
-Загрузите оба файла в корень GitHub Pages проекта FunDLC.
+Загрузите содержимое архива в корень GitHub Pages проекта.

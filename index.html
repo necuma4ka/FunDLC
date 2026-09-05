@@ -177,45 +177,81 @@ html,body{background:#07080b}
   position:fixed!important;left:22px!important;top:18px!important;right:auto!important;
   z-index:1000!important
 }
+
+/* FunDLC account avatar */
+.avatar-wrap{position:relative;flex:0 0 auto;width:78px;height:78px}
+.profile-avatar-img,.avatar-fallback{width:78px;height:78px;border-radius:16px;object-fit:cover;border:1px solid #4a3322;box-shadow:0 8px 25px #0008}
+.profile-avatar-img{display:block;background:#1a1d24;image-rendering:auto}
+.avatar-fallback{display:none;place-items:center;background:linear-gradient(135deg,#ff6a00,#ff9a3d);color:#160b03;font-size:28px;font-weight:900}
+.profile-main{min-width:0;flex:1}
+.avatar-actions{display:flex;flex-direction:column;gap:7px;margin-left:auto}
+.avatar-btn{font-size:9px!important;padding:9px 11px!important;white-space:nowrap}
+.avatar-reset{color:#b9bdc7!important;background:#10131a!important}
+.avatar-actions .avatar-reset:hover{color:#fff!important}
+@media(max-width:700px){.account-profile{flex-wrap:wrap}.profile-main{min-width:calc(100% - 94px)}.avatar-actions{width:100%;flex-direction:row;margin-left:0}.avatar-actions .avatar-btn{flex:1}}
 </style>
 
-<style id="fundlc-real-tabs">
-.fundlc-nav{position:sticky;top:0;z-index:1000;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);}
-.fundlc-tabs{gap:5px!important;align-items:center;}
-.fundlc-tabs .nav-tab,.fundlc-tabs .nav-link{display:inline-flex;align-items:center;gap:7px;padding:10px 11px!important;border:1px solid transparent!important;border-radius:10px;text-decoration:none;white-space:nowrap;transition:.18s ease;}
-.fundlc-tabs .nav-tab{color:#aeb4c0!important;background:transparent;}
-.fundlc-tabs .nav-tab:hover{color:#fff!important;background:#15181f!important;border-color:#2b303a!important;transform:translateY(-1px);}
-.fundlc-tabs .nav-tab.active{color:#fff!important;background:linear-gradient(180deg,#ff8a18,#ff6500)!important;border-color:#ff9a3d!important;box-shadow:0 7px 24px #ff6a0030;}
-.fundlc-tabs .nav-account{color:#d7dbe4!important;background:#11151c!important;border-color:#292f39!important;}
-.fundlc-tabs .nav-account:hover{color:#fff!important;background:#1a1f28!important;border-color:#ff7a18!important;}
-.fundlc-extra{scroll-margin-top:90px;} .download-card{max-width:720px;margin:20px auto 0;text-align:left;}
-@media(max-width:1000px){.fundlc-tabs .nav-tab span{display:none}.fundlc-tabs .nav-tab,.fundlc-tabs .nav-link{padding:10px!important}.fundlc-tabs{gap:3px!important}}
-@media(max-width:700px){.fundlc-tabs .nav-buy{display:none}.fundlc-nav{padding-left:3%;padding-right:3%;}.fundlc-tabs .nav-account span{display:none}}
+
+<style id="fundlc-modern-ui">
+:root{--bg:#07080b;--surface:#101217;--surface2:#151820;--text:#f4f5f7;--muted:#969ba8;--line:#242832;--accent:#ff6a00;--accent2:#ff9a3d;--nav:#08090cf2;--shadow:0 20px 70px rgba(0,0,0,.35)}
+body{transition:background .3s ease,color .3s ease}
+body.light-theme{--bg:#f4f6f9;--surface:#fff;--surface2:#f1f3f7;--text:#16191f;--muted:#626a78;--line:#dfe3ea;--nav:rgba(255,255,255,.88);--shadow:0 18px 50px rgba(30,38,55,.12);background:radial-gradient(circle at 50% -10%,#fff4e9 0,#f4f6f9 48%,#edf0f5 100%)!important}
+body.light-theme .nav{background:var(--nav);border-color:var(--line)}
+body.light-theme .card,body.light-theme .purchase-modal,body.light-theme .account-profile{background:linear-gradient(180deg,#fff,#f7f8fa);border-color:var(--line);box-shadow:var(--shadow)}
+body.light-theme .links,body.light-theme .features{color:#515866}
+body.light-theme .links>a:not(.nav-buy),body.light-theme .nav-link{color:#4f5663}
+body.light-theme .links>a:not(.nav-buy):hover,body.light-theme .nav-link:hover{color:#15181d;background:#eef1f5;border-color:#d8dde5}
+body.light-theme .badge{background:#fff3e8;border-color:#ffd1ad;color:#c75b00}
+body.light-theme .icon{background:#fff5ec;border-color:#ffd7b6}
+body.light-theme .purchase-modal{background:linear-gradient(180deg,#fff,#f5f7fa)!important}
+body.light-theme .modal-backdrop{background:rgba(20,24,32,.45)}
+body.light-theme .account-modal{background:radial-gradient(circle at 50% -10%,#fff1df 0,#f5f7fa 50%,#edf0f4 100%)!important}
+body.light-theme .account-modal .modal-close{background:#fff;color:#4c5360;border-color:#d9dee7}
+body.light-theme .account-input{background:#fff;color:#16191f;border-color:#d8dde5}
+body.light-theme .auth-tabs{background:#eef1f5}
+body.light-theme .auth-tab{color:#626a78}
+body.light-theme .auth-tab.active{background:#fff;color:#171a20;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+body.light-theme .cabinet-row,body.light-theme .purchase-summary{background:#fff;border-color:#e0e4ea;color:#555d6a}
+body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);border-color:#e0e4ea;box-shadow:var(--shadow)}
+
+.nav-tools{display:flex;align-items:center;gap:8px;margin-left:8px}
+.ui-tool{height:38px;min-width:38px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);color:var(--text);display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:.2s;padding:0 10px}
+.ui-tool:hover{transform:translateY(-1px);border-color:#ff8a3d;box-shadow:0 8px 22px #ff6a0018}
+.ui-tool svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.lang-btn{font-size:11px;font-weight:700}.theme-btn{width:38px;padding:0}
+.lang-menu{position:absolute;right:0;top:46px;width:158px;padding:6px;background:var(--surface);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);display:none;z-index:30}
+.lang-menu.show{display:block;animation:menuIn .16s ease}
+@keyframes menuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.lang-option{width:100%;display:flex;align-items:center;gap:9px;border:0;background:transparent;color:var(--text);padding:10px;border-radius:9px;cursor:pointer;text-align:left;font:inherit;font-size:11px}.lang-option:hover{background:var(--surface2)}.lang-option.active{background:#ff6a0015;color:var(--accent)}
+.lang-wrap{position:relative}
+.icon svg{width:25px;height:25px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.icon{display:grid;place-items:center}
+.account-profile{box-shadow:var(--shadow)}
+#logoutAccount{background:linear-gradient(135deg,#171a20,#20242c)!important;color:#d9dde5!important;border:1px solid #343945!important;box-shadow:none!important;transition:.2s}
+#logoutAccount:hover{background:linear-gradient(135deg,#20242c,#292e38)!important;border-color:#4a5160!important;color:#fff!important;transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.16)!important}
+#logoutAccount::before{content:'';width:16px;height:16px;margin-right:8px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' d='M10 17l5-5-5-5M15 12H3M21 3v18'/%3E%3C/svg%3E") center/contain no-repeat}
+@media(max-width:900px){.nav{padding:0 4%}.links{gap:5px}.links>a:not(.nav-buy),.nav-link{padding:8px 7px}.nav-tools{margin-left:2px}}
+@media(max-width:760px){.links>a:not(.nav-buy),.nav-link{display:none}.nav-tools{margin-left:auto}.logo{font-size:20px}}
 </style>
 
-<style id="fundlc-mangrove-background">
-html,body{background:#07130e!important;min-height:100%}
+
+<style id="fundlc-warden-bg-final">
+html,body{background:#070304!important;min-height:100%}
 body{position:relative;isolation:isolate;background:transparent!important}
 body::before{
  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
  background:
-   linear-gradient(180deg,rgba(4,12,9,.28) 0%,rgba(4,12,9,.12) 38%,rgba(3,10,8,.78) 100%),
-   url("./mangrove-background.png") center center/cover no-repeat;
- transform:scale(1.01);
+ linear-gradient(90deg,rgba(4,1,2,.82) 0%,rgba(4,1,2,.46) 40%,rgba(4,1,2,.10) 72%,rgba(4,1,2,.42) 100%),
+ linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.12) 45%,rgba(0,0,0,.80)),
+ url("./warden-background.png") center center/cover no-repeat;
+ transform:scale(1.01)
 }
 body::after{
  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
- background:radial-gradient(circle at 50% 18%,rgba(89,180,111,.12),transparent 42%),
-            linear-gradient(90deg,rgba(2,9,7,.22),transparent 30%,transparent 70%,rgba(2,9,7,.22));
+ background:radial-gradient(circle at 70% 42%,rgba(255,25,35,.09),transparent 35%)
 }
-.nav{
- background:rgba(5,15,12,.62)!important;
- backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
- border-bottom-color:rgba(255,255,255,.10)!important;
-}
-.card,.notice,.purchase-modal,.account-modal{
- backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-}
+.nav{background:rgba(8,3,5,.70)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:rgba(255,35,45,.16)!important}
+.card,.notice,.purchase-modal,.account-modal{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 </style>
 
 </head>
@@ -256,74 +292,82 @@ body::after{
 </script>
 
 <body>
-<nav class="nav fundlc-nav">
-  <a class="logo" href="#top" aria-label="FunDLC">Fun<span>DLC</span></a>
-  <div class="links fundlc-tabs">
-    <a class="nav-tab active" href="#top">⌂ <span>Главная</span></a>
-    <a class="nav-tab" href="#clients">✦ <span>Возможности</span></a>
-    <a class="nav-tab" href="#download">↓ <span>Скачать</span></a>
-    <a class="nav-tab" href="#news">◇ <span>Новости</span></a>
-    <a class="nav-tab" href="https://discord.gg/nursultan" target="_blank" rel="noopener">♧ <span>Поддержка</span></a>
-    <button class="nav-link account-open minecraft-text nav-account" type="button">♙ <span>Личный кабинет</span></button>
-    <a class="btn primary nav-buy" href="https://nursultan.fun/products" target="_blank" rel="noopener">Купить</a>
+<nav class="nav">
+  <a class="logo" href="#top">Fun<span>DLC</span></a>
+  <div class="links">
+    <a href="https://discord.gg/nursultan" target="_blank" rel="noopener" data-i18n="support">Поддержка</a>
+    <a href="https://nursultan.fun/money-per-video" target="_blank" rel="noopener" data-i18n="money">Деньги за видео</a>
+    <button class="nav-link account-open minecraft-text" type="button" data-i18n="cabinet">Личный кабинет</button>
+    <a class="btn primary nav-buy" href="https://nursultan.fun/products" target="_blank" rel="noopener" data-i18n="buy">Купить</a>
+  </div>
+  <div class="nav-tools">
+    <button class="ui-tool theme-btn" id="themeToggle" type="button" aria-label="Theme"><svg id="themeIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+    <div class="lang-wrap">
+      <button class="ui-tool lang-btn" id="langToggle" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9S14.5 18.5 12 21M12 3c-2.5 2.5-3.5 5.5-3.5 9S9.5 18.5 12 21"/></svg><span id="currentLang">RU</span></button>
+      <div class="lang-menu" id="langMenu">
+        <button class="lang-option active" data-lang="ru" type="button">🇷🇺 Русский</button>
+        <button class="lang-option" data-lang="en" type="button">🇬🇧 English</button>
+        <button class="lang-option" data-lang="uk" type="button">🇺🇦 Українська</button>
+      </div>
+    </div>
   </div>
 </nav>
 
 <header class="hero" id="top">
-  <div class="badge">MINECRAFT CLIENT • FUN SERIES</div>
-  <h1>Играй по-<span class="tight-hyphen">своему.</span><br><span>FunDLC.</span></h1>
-  <p>Современный Minecraft-клиент с удобным интерфейсом, настройками модулей и акцентом на производительность.</p>
-  <div class="actions"><a class="btn primary" href="#clients">Выбрать версию</a><a class="btn" href="#why">Подробнее</a></div>
-  <div class="notice">Используй сторонние клиенты только там, где это разрешено правилами сервера.</div>
+  <div class="badge" data-i18n="badge">MINECRAFT CLIENT • FUN SERIES</div>
+  <h1 data-i18n-html="heroTitle">Играй по-<span class="tight-hyphen">своему.</span><br><span>FunDLC.</span></h1>
+  <p data-i18n="heroText">Современный Minecraft-клиент с удобным интерфейсом, настройками модулей и акцентом на производительность.</p>
+  <div class="actions"><a class="btn primary" href="#clients" data-i18n="chooseVersion">Выбрать версию</a><a class="btn" href="#why" data-i18n="details">Подробнее</a></div>
+  <div class="notice" data-i18n="notice">Используй сторонние клиенты только там, где это разрешено правилами сервера.</div>
 </header>
 
 <section class="section" id="clients">
-  <h2>Выбери доступ</h2>
-  <div class="sub">Простые тарифы без лишнего.</div>
+  <h2 data-i18n="accessTitle">Выбери доступ</h2>
+  <div class="sub" data-i18n="accessSub">Простые тарифы без лишнего.</div>
   <div class="grid">
     <article class="card subscription" data-plan="basic">
-      <div class="icon">⚡</div>
+      <div class="icon" data-icon="rocket"></div>
       <h3>FunDLC Basic</h3>
-      <p>Основная версия клиента для комфортной игры.</p>
+      <p data-i18n="basicText">Основная версия клиента для комфортной игры.</p>
       <div class="beta-only">
-        <div>✓ Основные функции клиента</div>
-        <div>✓ Настраиваемый интерфейс</div>
-        <div>✓ Регулярные обновления</div>
+        <div data-i18n="basicF1">✓ Основные функции клиента</div>
+        <div data-i18n="basicF2">✓ Настраиваемый интерфейс</div>
+        <div data-i18n="basicF3">✓ Регулярные обновления</div>
       </div>
       <div class="price">Basic</div>
-      <button class="btn primary full buy-btn open-basic">Купить</button>
+      <button class="btn primary full buy-btn open-basic" data-i18n="buy">Купить</button>
     </article>
 
     <article class="card featured subscription" data-plan="beta">
       <div class="tag">BETA</div>
-      <div class="icon">✦</div>
+      <div class="icon" data-icon="diamond"></div>
       <h3>FunDLC Beta</h3>
-      <p>Доступ к Beta-версии клиента. Подписка доступна только навсегда.</p>
+      <p data-i18n="betaText">Доступ к Beta-версии клиента. Подписка доступна только навсегда.</p>
       <div class="price">1 999 ₽ <small>/ навсегда</small></div>
       <div class="beta-only">
-        <div>✓ Lifetime-доступ</div>
-        <div>✓ Beta-функции</div>
-        <div>✓ Будущие обновления Beta</div>
+        <div data-i18n="betaF1">✓ Lifetime-доступ</div>
+        <div data-i18n="betaF2">✓ Beta-функции</div>
+        <div data-i18n="betaF3">✓ Будущие обновления Beta</div>
       </div>
-      <a class="btn primary full buy-btn" href="#">Купить Beta</a>
+      <a class="btn primary full buy-btn" href="#" data-i18n="buyBeta">Купить Beta</a>
     </article>
   </div>
 </section>
 
 <section class="section" id="why">
-  <h2>Почему FunDLC?</h2><div class="sub">Минимализм, скорость и удобство.</div>
+  <h2 data-i18n="whyTitle">Почему FunDLC?</h2><div class="sub" data-i18n="whySub">Минимализм, скорость и удобство.</div>
   <div class="why">
-    <div class="card"><div class="icon">◈</div><h3>Чистый интерфейс</h3><p>Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.</p></div>
-    <div class="card"><div class="icon">↯</div><h3>Производительность</h3><p>Оптимизированный интерфейс без ощущения перегруженности.</p></div>
-    <div class="card"><div class="icon">⚙</div><h3>Гибкие настройки</h3><p>Настраивай внешний вид и поведение доступных функций под себя.</p></div>
+    <div class="card"><div class="icon" data-icon="layout"></div><h3 data-i18n="why1Title">Чистый интерфейс</h3><p data-i18n="why1Text">Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.</p></div>
+    <div class="card"><div class="icon" data-icon="bolt"></div><h3 data-i18n="why2Title">Производительность</h3><p data-i18n="why2Text">Оптимизированный интерфейс без ощущения перегруженности.</p></div>
+    <div class="card"><div class="icon" data-icon="settings"></div><h3 data-i18n="why3Title">Гибкие настройки</h3><p data-i18n="why3Text">Настраивай внешний вид и поведение доступных функций под себя.</p></div>
   </div>
 </section>
 
 <section class="section faq" id="faq">
-  <h2>FAQ</h2><div class="sub">Частые вопросы.</div>
-  <details><summary>Какие версии Minecraft поддерживаются?</summary><p>Добавь сюда актуальный список версий твоего клиента, например 1.21.x.</p></details>
-  <details><summary>Как происходит покупка?</summary><p>После подключения платежной системы пользователь сможет оплатить выбранный тариф и получить доступ через личный кабинет.</p></details>
-  <details><summary>Можно ли использовать клиент на любом сервере?</summary><p>Нет. Всегда проверяй правила конкретного сервера: некоторые сторонние клиенты или отдельные функции запрещены.</p></details>
+  <h2>FAQ</h2><div class="sub" data-i18n="faqSub">Частые вопросы.</div>
+  <details><summary data-i18n="faq1Q">Какие версии Minecraft поддерживаются?</summary><p data-i18n="faq1A">Добавь сюда актуальный список версий твоего клиента, например 1.21.x.</p></details>
+  <details><summary data-i18n="faq2Q">Как происходит покупка?</summary><p data-i18n="faq2A">После подключения платежной системы пользователь сможет оплатить выбранный тариф и получить доступ через личный кабинет.</p></details>
+  <details><summary data-i18n="faq3Q">Можно ли использовать клиент на любом сервере?</summary><p data-i18n="faq3A">Нет. Всегда проверяй правила конкретного сервера: некоторые сторонние клиенты или отдельные функции запрещены.</p></details>
 </section>
 
 
@@ -332,8 +376,8 @@ body::after{
   <div class="purchase-modal">
     <button class="modal-close" aria-label="Закрыть">×</button>
     <div class="modal-badge">FUN DLC BASIC</div>
-    <h2>Выбери срок подписки</h2>
-    <p>Проведи ползунок и выбери нужный срок.</p>
+    <h2 data-i18n="chooseTerm">Выбери срок подписки</h2>
+    <p data-i18n="termText">Проведи ползунок и выбери нужный срок.</p>
 
     <div class="slider-wrap"><canvas class="particle-canvas" id="particleCanvas"></canvas>
       <div class="slider-value"><span id="daysValue">30 дней</span><strong id="daysPrice">249 ₽</strong></div>
@@ -344,10 +388,10 @@ body::after{
     </div>
 
     <div class="purchase-summary">
-      <span>FunDLC Basic</span>
+      <span data-i18n="basicName">FunDLC Basic</span>
       <b id="summaryText">30 дней • 249 ₽</b>
     </div>
-    <button class="btn primary full confirm-buy">Перейти к покупке</button>
+    <button class="btn primary full confirm-buy" data-i18n="goPurchase">Перейти к покупке</button>
   </div>
 </div>
 
@@ -357,64 +401,61 @@ body::after{
   <div class="purchase-modal account-modal">
     <button class="modal-close account-close" aria-label="Вернуться на главную">← На главную</button>
     <div class="modal-badge">FUN DLC ACCOUNT</div>
-    <h2 id="authTitle">Авторизация</h2>
-    <p id="accountIntro">Войди в аккаунт или создай новый.</p>
+    <h2 id="authTitle" data-i18n="loginTitle">Авторизация</h2>
+    <p id="accountIntro" data-i18n="loginIntro">Войди в аккаунт или создай новый.</p>
 
     <div id="authGuest">
       <div class="auth-tabs">
-        <button class="auth-tab active" data-auth-tab="login" type="button">Войти</button>
-        <button class="auth-tab" data-auth-tab="register" type="button">Регистрация</button>
+        <button class="auth-tab active" data-auth-tab="login" type="button" data-i18n="login">Войти</button>
+        <button class="auth-tab" data-auth-tab="register" type="button" data-i18n="register">Регистрация</button>
       </div>
       <div class="auth-error" id="authError"></div>
 
       <form id="loginForm">
-        <div class="auth-field"><label class="account-label">Логин или e-mail</label><input class="account-input" id="loginIdentity" type="text" maxlength="64" autocomplete="username" placeholder="Введите логин или e-mail" required></div>
-        <div class="auth-field"><label class="account-label">Пароль</label><input class="account-input" id="loginPassword" type="password" maxlength="128" autocomplete="current-password" placeholder="Введите пароль" required></div>
-        <label style="display:flex;gap:8px;align-items:center;color:#c7cad2;font-size:11px;margin:2px 0 16px"><input id="rememberMe" type="checkbox"> Запомнить меня</label>
-        <button class="btn primary full" type="submit">↪ Войти</button>
+        <div class="auth-field"><label class="account-label" data-i18n="loginEmail">Логин или e-mail</label><input class="account-input" id="loginIdentity" type="text" maxlength="64" autocomplete="username" placeholder="Введите логин или e-mail" data-i18n-ph="loginPlaceholder" required></div>
+        <div class="auth-field"><label class="account-label" data-i18n="password">Пароль</label><input class="account-input" id="loginPassword" type="password" maxlength="128" autocomplete="current-password" placeholder="Введите пароль" data-i18n-ph="passwordPlaceholder" required></div>
+        <label style="display:flex;gap:8px;align-items:center;color:#c7cad2;font-size:11px;margin:2px 0 16px"><input id="rememberMe" type="checkbox"> <span data-i18n="remember">Запомнить меня</span></label>
+        <button class="btn primary full" type="submit" data-i18n="login">Войти</button>
       </form>
 
       <form id="registerForm" style="display:none">
-        <div class="auth-field"><label class="account-label">Никнейм</label><input class="account-input" id="regLogin" type="text" maxlength="24" autocomplete="username" placeholder="Например, Nursultan" required></div>
-        <div class="auth-field"><label class="account-label">E-mail</label><input class="account-input" id="regEmail" type="email" maxlength="120" autocomplete="email" placeholder="name@example.com" required></div>
-        <div class="auth-field"><label class="account-label">Пароль</label><input class="account-input" id="regPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Минимум 8 символов" required></div>
-        <div class="auth-field"><label class="account-label">Повторите пароль</label><input class="account-input" id="regPassword2" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Повторите пароль" required></div>
-        <label style="display:flex;gap:8px;align-items:flex-start;color:#c7cad2;font-size:11px;line-height:1.5;margin:2px 0 16px"><input id="robotCheck" type="checkbox" required> Я подтверждаю, что я не робот</label>
-        <button class="btn primary full" type="submit">Создать аккаунт</button>
-        <div class="auth-meta">Данные аккаунта сохраняются в браузере. UUID выдаётся последовательно: 001, 002, 003...</div>
+        <div class="auth-field"><label class="account-label" data-i18n="nickname">Никнейм</label><input class="account-input" id="regLogin" type="text" maxlength="24" autocomplete="username" placeholder="Например, Nursultan" data-i18n-ph="nickPlaceholder" required></div>
+        <div class="auth-field"><label class="account-label" data-i18n="email">E-mail</label><input class="account-input" id="regEmail" type="email" maxlength="120" autocomplete="email" placeholder="name@example.com" data-i18n-ph="emailPlaceholder" required></div>
+        <div class="auth-field"><label class="account-label" data-i18n="password">Пароль</label><input class="account-input" id="regPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Минимум 8 символов" data-i18n-ph="passwordMin" required></div>
+        <div class="auth-field"><label class="account-label">Повторите пароль</label><input class="account-input" id="regPassword2" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Повторите пароль" data-i18n-ph="passwordAgain" required></div>
+        <label style="display:flex;gap:8px;align-items:flex-start;color:#c7cad2;font-size:11px;line-height:1.5;margin:2px 0 16px"><input id="robotCheck" type="checkbox" required> <span data-i18n="robot">Я подтверждаю, что я не робот</span></label>
+        <button class="btn primary full" type="submit" data-i18n="createAccount">Создать аккаунт</button>
+        <div class="auth-meta" data-i18n="localDb">Данные аккаунта и аватар сохраняются в локальной базе браузера. UUID выдаётся последовательно: 001, 002, 003...</div>
       </form>
     </div>
 
     <div id="accountProfile" style="display:none">
       <div class="account-profile">
-        <div class="profile-avatar" id="profileAvatar">F</div>
-        <div><strong id="profileName">Игрок</strong><span id="profileEmail">E-mail</span></div>
+        <div class="avatar-wrap">
+          <img class="profile-avatar profile-avatar-img" id="profileAvatarImg" src="avatar-default.jpg" alt="Аватар аккаунта">
+          <div class="avatar-fallback profile-avatar" id="profileAvatarFallback">F</div>
+        </div>
+        <div class="profile-main"><strong id="profileName">Игрок</strong><span id="profileEmail">E-mail</span></div>
+        <div class="avatar-actions">
+          <button class="btn avatar-btn" id="changeAvatarBtn" type="button" data-i18n="changeAvatar">Изменить аватар</button>
+          <button class="btn avatar-btn avatar-reset" id="resetAvatarBtn" type="button" data-i18n="defaultAvatar">По умолчанию</button>
+          <input id="avatarInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
       </div>
-      <div class="purchase-summary"><span>Статус</span><b>Аккаунт активен</b></div>
+      <div class="purchase-summary"><span data-i18n="status">Статус</span><b data-i18n="active">Аккаунт активен</b></div>
       <div class="cabinet-grid">
-        <div class="cabinet-row"><span>UID</span><b id="profileUid">—</b></div>
-        <div class="cabinet-row"><span>UUID</span><b id="profileUuid">—</b></div>
-        <div class="cabinet-row"><span>Логин</span><b id="profileLogin">—</b></div>
-        <div class="cabinet-row"><span>Группа</span><b id="profileGroup">Пользователь</b></div>
-        <div class="cabinet-row"><span>Регистрация</span><b id="profileCreated">—</b></div>
-        <div class="cabinet-row"><span>Последний вход</span><b id="profileLastLogin">—</b></div>
+        <div class="cabinet-row"><span data-i18n="uid">UID</span><b id="profileUid">—</b></div>
+        <div class="cabinet-row"><span data-i18n="uuid">UUID</span><b id="profileUuid">—</b></div>
+        <div class="cabinet-row"><span data-i18n="loginLabel">Логин</span><b id="profileLogin">—</b></div>
+        <div class="cabinet-row"><span data-i18n="group">Группа</span><b id="profileGroup">Пользователь</b></div>
+        <div class="cabinet-row"><span data-i18n="registered">Регистрация</span><b id="profileCreated">—</b></div>
+        <div class="cabinet-row"><span data-i18n="lastLogin">Последний вход</span><b id="profileLastLogin">—</b></div>
       </div>
-      <div class="purchase-summary" style="margin-top:10px"><span>Подписка</span><b id="profilePlan">Нет подписки</b></div>
-      <button class="btn full danger" id="logoutAccount" type="button">↪ Выйти</button>
+      <div class="purchase-summary" style="margin-top:10px"><span data-i18n="subscription">Подписка</span><b id="profilePlan">Нет подписки</b></div>
+      <button class="btn full" id="logoutAccount" type="button" data-i18n="logout">Выйти</button>
     </div>
   </div>
 </div>
-
-<section class="section fundlc-extra" id="download">
-  <h2>Скачать FunDLC</h2>
-  <div class="sub">Выбери нужную версию клиента.</div>
-  <div class="card download-card"><div class="icon">↓</div><h3>FunDLC Client</h3><p>Последняя доступная версия клиента и необходимые файлы.</p><a class="btn primary" href="https://nursultan.fun/products" target="_blank" rel="noopener">Перейти к загрузке</a></div>
-</section>
-<section class="section fundlc-extra" id="news">
-  <h2>Новости</h2>
-  <div class="sub">Обновления и события FunDLC.</div>
-  <div class="why"><div class="card"><div class="icon">✦</div><h3>FunDLC</h3><p>Следи за новыми версиями, функциями и обновлениями клиента.</p></div><div class="card"><div class="icon">↻</div><h3>Обновления</h3><p>Новые возможности будут появляться здесь.</p></div></div>
-</section>
 
 <footer class="footer"><div>© 2026 FunDLC. All rights reserved.</div><div>Discord • Support • Terms</div></footer>
 
@@ -481,7 +522,7 @@ body::after{
   }
   function migrateUUIDs(){
     const list=usersRaw(); let changed=false;
-    list.forEach((u,i)=>{ const wanted=String(i+1).padStart(3,'0'); if(u.uuid!==wanted){u.uuid=wanted;changed=true;} });
+    list.forEach((u,i)=>{ const wanted=String(i+1).padStart(3,'0'); if(u.uuid!==wanted){u.uuid=wanted;changed=true;} if(!u.avatar){u.avatar=DEFAULT_AVATAR;changed=true;} });
     if(changed) localStorage.setItem(USERS_KEY,JSON.stringify(list));
   }
   function uuid(list){
@@ -492,6 +533,7 @@ body::after{
   function now(){
     return new Date().toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
   }
+  const DEFAULT_AVATAR='avatar-default.jpg';
   migrateUUIDs();
 
   function showError(msg,success=false){
@@ -520,7 +562,13 @@ body::after{
     intro.textContent='Данные твоего аккаунта FunDLC.';
     document.getElementById('profileName').textContent=a.login;
     document.getElementById('profileEmail').textContent=a.email;
-    document.getElementById('profileAvatar').textContent=a.login.charAt(0).toUpperCase();
+    const img=document.getElementById('profileAvatarImg');
+    const fallback=document.getElementById('profileAvatarFallback');
+    const avatar=a.avatar || DEFAULT_AVATAR;
+    img.src=avatar;
+    img.style.display='block';
+    fallback.style.display='none';
+    img.onerror=()=>{ img.style.display='none'; fallback.style.display='grid'; fallback.textContent=a.login.charAt(0).toUpperCase(); };
     document.getElementById('profileUid').textContent=a.uid;
     document.getElementById('profileUuid').textContent=a.uuid;
     document.getElementById('profileLogin').textContent=a.login;
@@ -583,11 +631,56 @@ body::after{
       if(list.some(u=>u.login.toLowerCase()===login.toLowerCase())) throw new Error('Этот логин уже занят.');
       if(list.some(u=>u.email.toLowerCase()===email)) throw new Error('Этот email уже зарегистрирован.');
       const t=now();
-      const a={uid:uid(),uuid:uuid(list),login,email,password:regPassword.value,group:'Пользователь',created_at:t,last_login:t,plan:'Нет подписки'};
+      const a={uid:uid(),uuid:uuid(list),login,email,password:regPassword.value,group:'Пользователь',created_at:t,last_login:t,plan:'Нет подписки',avatar:DEFAULT_AVATAR};
       list.push(a); saveUsers(list); localStorage.setItem(SESSION_KEY,a.uid); renderAccount(a);
     }catch(err){ showError(err.message); }
     finally{ btn.disabled=false; }
   });
+
+  const avatarInput=document.getElementById('avatarInput');
+  const changeAvatarBtn=document.getElementById('changeAvatarBtn');
+  const resetAvatarBtn=document.getElementById('resetAvatarBtn');
+
+  function updateCurrentAccount(mutator){
+    const id=localStorage.getItem(SESSION_KEY);
+    if(!id) return null;
+    const list=users();
+    const idx=list.findIndex(u=>u.uid===id);
+    if(idx<0) return null;
+    mutator(list[idx]);
+    saveUsers(list);
+    renderAccount(list[idx]);
+    if(window.FunDLCAuth) window.FunDLCAuth.save(list[idx]);
+    if(window.FunDLCSession) window.FunDLCSession.save(list[idx]);
+    return list[idx];
+  }
+
+  changeAvatarBtn.addEventListener('click',()=>avatarInput.click());
+  avatarInput.addEventListener('change',()=>{
+    const file=avatarInput.files && avatarInput.files[0];
+    if(!file) return;
+    if(file.size>8*1024*1024){ showError('Аватар слишком большой. Максимум 8 МБ.'); avatarInput.value=''; return; }
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const src=String(reader.result||'');
+      const im=new Image();
+      im.onload=()=>{
+        const max=256, scale=Math.min(1,max/Math.max(im.width,im.height));
+        const w=Math.max(1,Math.round(im.width*scale)), h=Math.max(1,Math.round(im.height*scale));
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(im,0,0,w,h);
+        const compressed=c.toDataURL('image/jpeg',0.88);
+        try{ updateCurrentAccount(a=>a.avatar=compressed); clearError(); }
+        catch(e){ showError('Не удалось сохранить аватар.'); }
+        avatarInput.value='';
+      };
+      im.onerror=()=>{showError('Не удалось открыть изображение.');avatarInput.value='';};
+      im.src=src;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  resetAvatarBtn.addEventListener('click',()=>{ updateCurrentAccount(a=>a.avatar=DEFAULT_AVATAR); clearError(); });
 
   document.getElementById('logoutAccount').addEventListener('click',()=>{
     localStorage.removeItem(SESSION_KEY);
@@ -679,118 +772,33 @@ body::after{
 })();
 </script>
 
-<script>
+
+
+<script id="fundlc-i18n-theme">
 (() => {
-  const accountModal = document.getElementById('accountModal');
-  const openAccount = document.querySelector('.account-open');
-  const guest = document.getElementById('authGuest');
-  const profile = document.getElementById('accountProfile');
-  const title = document.getElementById('authTitle');
-  const intro = document.getElementById('accountIntro');
-  const error = document.getElementById('authError');
-  const closeAccount = () => { accountModal.classList.remove('show'); document.body.style.overflow=''; };
-  // API lives next to this page. URL() also works when the site is inside a subfolder.
-  const API_URL = new URL('', window.location.href).href;
-
-  const api = async (action, data={}) => {
-    let r;
-    try {
-      r = await fetch(API_URL + '?action=' + encodeURIComponent(action), {
-        method: 'POST',
-        headers: {'Content-Type':'application/json', 'Accept':'application/json'},
-        credentials: 'same-origin',
-        cache: 'no-store',
-        body: JSON.stringify(data)
-      });
-    } catch (networkError) {
-      throw new Error(
-        'Не удалось подключиться к серверу. Проверь, что сайт открыт через PHP-хостинг (http/https), а файл  находится рядом с FunDLC_site.html. Не открывай страницу через file://.'
-      );
-    }
-
-    const text = await r.text();
-    let j;
-    try {
-      j = JSON.parse(text);
-    } catch (_) {
-      throw new Error(
-        'Сервер  вернул не JSON (HTTP ' + r.status + '). Проверь, что PHP включён и  доступен.'
-      );
-    }
-
-    if (!r.ok || !j.ok) throw new Error(j.error || ('Ошибка сервера HTTP ' + r.status + '.'));
-    return j;
+  const I18N={
+    ru:{support:'Поддержка',money:'Деньги за видео',cabinet:'Личный кабинет',buy:'Купить',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Играй по-<span class="tight-hyphen">своему.</span><br><span>FunDLC.</span>',heroText:'Современный Minecraft-клиент с удобным интерфейсом, настройками модулей и акцентом на производительность.',chooseVersion:'Выбрать версию',details:'Подробнее',notice:'Используй сторонние клиенты только там, где это разрешено правилами сервера.',accessTitle:'Выбери доступ',accessSub:'Простые тарифы без лишнего.',basicText:'Основная версия клиента для комфортной игры.',basicF1:'✓ Основные функции клиента',basicF2:'✓ Настраиваемый интерфейс',basicF3:'✓ Регулярные обновления',betaText:'Доступ к Beta-версии клиента. Подписка доступна только навсегда.',betaF1:'✓ Lifetime-доступ',betaF2:'✓ Beta-функции',betaF3:'✓ Будущие обновления Beta',buyBeta:'Купить Beta',whyTitle:'Почему FunDLC?',whySub:'Минимализм, скорость и удобство.',why1Title:'Чистый интерфейс',why1Text:'Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.',why2Title:'Производительность',why2Text:'Оптимизированный интерфейс без ощущения перегруженности.',why3Title:'Гибкие настройки',why3Text:'Настраивай внешний вид и поведение доступных функций под себя.',faqSub:'Частые вопросы.',faq1Q:'Какие версии Minecraft поддерживаются?',faq1A:'Добавь сюда актуальный список версий твоего клиента, например 1.21.x.',faq2Q:'Как происходит покупка?',faq2A:'После подключения платежной системы пользователь сможет оплатить выбранный тариф и получить доступ через личный кабинет.',faq3Q:'Можно ли использовать клиент на любом сервере?',faq3A:'Нет. Всегда проверяй правила конкретного сервера: некоторые сторонние клиенты или отдельные функции запрещены.',chooseTerm:'Выбери срок подписки',termText:'Проведи ползунок и выбери нужный срок.',basicName:'FunDLC Basic',goPurchase:'Перейти к покупке',loginTitle:'Авторизация',loginIntro:'Войди в аккаунт или создай новый.',login:'Войти',register:'Регистрация',loginEmail:'Логин или e-mail',password:'Пароль',remember:'Запомнить меня',nickname:'Никнейм',email:'E-mail',robot:'Я подтверждаю, что я не робот',createAccount:'Создать аккаунт',localDb:'Данные аккаунта и аватар сохраняются в локальной базе браузера. UUID выдаётся последовательно: 001, 002, 003...',changeAvatar:'Изменить аватар',defaultAvatar:'По умолчанию',status:'Статус',active:'Аккаунт активен',uid:'UID',uuid:'UUID',loginLabel:'Логин',group:'Группа',registered:'Регистрация',lastLogin:'Последний вход',subscription:'Подписка',logout:'Выйти',loginPlaceholder:'Введите логин или e-mail',passwordPlaceholder:'Введите пароль',nickPlaceholder:'Например, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Минимум 8 символов',passwordAgain:'Повторите пароль'},
+    en:{support:'Support',money:'Money for videos',cabinet:'Account',buy:'Buy',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Play your<br><span>FunDLC.</span>',heroText:'A modern Minecraft client with a clean interface, module settings and a focus on performance.',chooseVersion:'Choose version',details:'Learn more',notice:'Use third-party clients only where the server rules allow them.',accessTitle:'Choose access',accessSub:'Simple plans without the clutter.',basicText:'The main client version for comfortable gameplay.',basicF1:'✓ Core client features',basicF2:'✓ Customizable interface',basicF3:'✓ Regular updates',betaText:'Access to the Beta client. This subscription is lifetime only.',betaF1:'✓ Lifetime access',betaF2:'✓ Beta features',betaF3:'✓ Future Beta updates',buyBeta:'Buy Beta',whyTitle:'Why FunDLC?',whySub:'Minimalism, speed and convenience.',why1Title:'Clean interface',why1Text:'Nothing extra: quick access to settings and a tidy HUD.',why2Title:'Performance',why2Text:'An optimized interface without feeling overloaded.',why3Title:'Flexible settings',why3Text:'Customize the look and behavior of available features.',faqSub:'Frequently asked questions.',faq1Q:'Which Minecraft versions are supported?',faq1A:'Add your client’s current supported versions here, for example 1.21.x.',faq2Q:'How does the purchase work?',faq2A:'After a payment system is connected, users will be able to pay for a plan and receive access through the account.',faq3Q:'Can the client be used on any server?',faq3A:'No. Always check the rules of the specific server: some clients or features may be prohibited.',chooseTerm:'Choose subscription period',termText:'Move the slider and choose the period you need.',basicName:'FunDLC Basic',goPurchase:'Continue to purchase',loginTitle:'Sign in',loginIntro:'Sign in to your account or create a new one.',login:'Sign in',register:'Register',loginEmail:'Login or e-mail',password:'Password',remember:'Remember me',nickname:'Nickname',email:'E-mail',robot:'I confirm that I am not a robot',createAccount:'Create account',localDb:'Account data and avatar are saved in the browser’s local database. UUIDs are assigned sequentially: 001, 002, 003...',changeAvatar:'Change avatar',defaultAvatar:'Default',status:'Status',active:'Account active',uid:'UID',uuid:'UUID',loginLabel:'Login',group:'Group',registered:'Registered',lastLogin:'Last login',subscription:'Subscription',logout:'Log out',loginPlaceholder:'Enter login or e-mail',passwordPlaceholder:'Enter password',nickPlaceholder:'For example, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Minimum 8 characters',passwordAgain:'Repeat password'},
+    uk:{support:'Підтримка',money:'Гроші за відео',cabinet:'Особистий кабінет',buy:'Купити',badge:'MINECRAFT CLIENT • FUN SERIES',heroTitle:'Грай по-<span class="tight-hyphen">своєму.</span><br><span>FunDLC.</span>',heroText:'Сучасний Minecraft-клієнт зі зручним інтерфейсом, налаштуваннями модулів та акцентом на продуктивність.',chooseVersion:'Обрати версію',details:'Детальніше',notice:'Використовуй сторонні клієнти лише там, де це дозволено правилами сервера.',accessTitle:'Обери доступ',accessSub:'Прості тарифи без зайвого.',basicText:'Основна версія клієнта для комфортної гри.',basicF1:'✓ Основні функції клієнта',basicF2:'✓ Налаштовуваний інтерфейс',basicF3:'✓ Регулярні оновлення',betaText:'Доступ до Beta-версії клієнта. Підписка доступна лише назавжди.',betaF1:'✓ Довічний доступ',betaF2:'✓ Beta-функції',betaF3:'✓ Майбутні оновлення Beta',buyBeta:'Купити Beta',whyTitle:'Чому FunDLC?',whySub:'Мінімалізм, швидкість та зручність.',why1Title:'Чистий інтерфейс',why1Text:'Нічого зайвого: швидкий доступ до налаштувань та акуратний HUD.',why2Title:'Продуктивність',why2Text:'Оптимізований інтерфейс без відчуття перевантаженості.',why3Title:'Гнучкі налаштування',why3Text:'Налаштовуй вигляд та поведінку доступних функцій під себе.',faqSub:'Часті запитання.',faq1Q:'Які версії Minecraft підтримуються?',faq1A:'Додай сюди актуальний список версій твого клієнта, наприклад 1.21.x.',faq2Q:'Як відбувається покупка?',faq2A:'Після підключення платіжної системи користувач зможе оплатити тариф та отримати доступ через особистий кабінет.',faq3Q:'Чи можна використовувати клієнт на будь-якому сервері?',faq3A:'Ні. Завжди перевіряй правила конкретного сервера: деякі клієнти або функції можуть бути заборонені.',chooseTerm:'Обери термін підписки',termText:'Пересунь повзунок та обери потрібний термін.',basicName:'FunDLC Basic',goPurchase:'Перейти до покупки',loginTitle:'Авторизація',loginIntro:'Увійди до акаунта або створи новий.',login:'Увійти',register:'Реєстрація',loginEmail:'Логін або e-mail',password:'Пароль',remember:'Запам’ятати мене',nickname:'Нікнейм',email:'E-mail',robot:'Я підтверджую, що я не робот',createAccount:'Створити акаунт',localDb:'Дані акаунта та аватар зберігаються в локальній базі браузера. UUID видається послідовно: 001, 002, 003...',changeAvatar:'Змінити аватар',defaultAvatar:'За замовчуванням',status:'Статус',active:'Акаунт активний',uid:'UID',uuid:'UUID',loginLabel:'Логін',group:'Група',registered:'Реєстрація',lastLogin:'Останній вхід',subscription:'Підписка',logout:'Вийти',loginPlaceholder:'Введи логін або e-mail',passwordPlaceholder:'Введи пароль',nickPlaceholder:'Наприклад, Nursultan',emailPlaceholder:'name@example.com',passwordMin:'Мінімум 8 символів',passwordAgain:'Повтори пароль'}
   };
-  function showError(msg, success=false){ error.textContent=msg; error.classList.toggle('auth-success',success); error.style.display='block'; }
-  function clearError(){ error.style.display='none'; error.classList.remove('auth-success'); }
-  function setTab(tab){
-    clearError();
-    document.querySelectorAll('.auth-tab').forEach(b=>b.classList.toggle('active',b.dataset.authTab===tab));
-    document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
-    document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
-    title.textContent=tab==='login'?'Авторизация':'Регистрация';
-    intro.textContent=tab==='login'?'Войди в свой аккаунт FunDLC.':'Создай аккаунт FunDLC.';
+  const langKey='fundlc_lang_v1',themeKey='fundlc_theme_v1';
+  const langToggle=document.getElementById('langToggle'),langMenu=document.getElementById('langMenu'),currentLang=document.getElementById('currentLang'),themeToggle=document.getElementById('themeToggle'),themeIcon=document.getElementById('themeIcon');
+  function setLang(lang){
+    const d=I18N[lang]||I18N.ru; document.documentElement.lang=lang; currentLang.textContent=lang.toUpperCase(); localStorage.setItem(langKey,lang);
+    document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(d[k]!=null)el.innerHTML=d[k]});
+    document.querySelectorAll('[data-i18n-html]').forEach(el=>{const k=el.dataset.i18nHtml;if(d[k]!=null)el.innerHTML=d[k]});
+    document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(d[k]!=null)el.placeholder=d[k]});
+    document.querySelectorAll('.lang-option').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+    document.title=lang==='ru'?'FunDLC — Minecraft Client':lang==='uk'?'FunDLC — Minecraft Client':'FunDLC — Minecraft Client';
   }
-  function renderAccount(a){
-    guest.style.display='none'; profile.style.display='block'; title.classList.add('minecraft-text'); title.textContent='Личный кабинет'; intro.textContent='Данные твоего аккаунта FunDLC.';
-    document.getElementById('profileName').textContent=a.login; document.getElementById('profileEmail').textContent=a.email;
-    document.getElementById('profileAvatar').textContent=a.login.charAt(0).toUpperCase();
-    document.getElementById('profileUid').textContent=a.uid; document.getElementById('profileUuid').textContent=a.uuid;
-    document.getElementById('profileLogin').textContent=a.login; document.getElementById('profileGroup').textContent=a.group;
-    document.getElementById('profileCreated').textContent=a.created_at; document.getElementById('profileLastLogin').textContent=a.last_login;
-    document.getElementById('profilePlan').textContent=a.plan || 'Нет подписки';
-  }
-  async function loadSession(){
-    try {
-      const r = await fetch(API_URL + '?action=me', {
-        method:'GET',
-        credentials:'same-origin',
-        cache:'no-store',
-        headers:{'Accept':'application/json'}
-      });
-      const text = await r.text();
-      let j;
-      try { j = JSON.parse(text); }
-      catch (_) { throw new Error('Сервер  вернул не JSON (HTTP ' + r.status + ').'); }
-      if (!r.ok || !j.ok) throw new Error(j.error || ('Ошибка сервера HTTP ' + r.status + '.'));
-      if(j.account) renderAccount(j.account);
-      else { guest.style.display='block'; profile.style.display='none'; setTab('login'); }
-    } catch(e){
-      guest.style.display='block';
-      profile.style.display='none';
-      setTab('login');
-      // Don't hide the real connection problem behind a generic "Failed to fetch".
-      showError(e.message || 'Не удалось подключиться к серверу.');
-    }
-  }
-  openAccount.addEventListener('click', async()=>{ accountModal.classList.add('show'); document.body.style.overflow='hidden'; await loadSession(); });
-  document.querySelector('.account-close').addEventListener('click',closeAccount); document.querySelector('.account-backdrop').addEventListener('click',closeAccount);
-  document.querySelectorAll('.auth-tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.authTab)));
-  document.getElementById('loginForm').addEventListener('submit',async e=>{
-    e.preventDefault(); clearError(); const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
-    try { const j=await api('login',{identity:loginIdentity.value.trim(),password:loginPassword.value,remember:rememberMe.checked}); renderAccount(j.account); }
-    catch(err){ showError(err.message); } finally { btn.disabled=false; }
-  });
-  document.getElementById('registerForm').addEventListener('submit',async e=>{
-    e.preventDefault(); clearError();
-    if(regPassword.value!==regPassword2.value){ showError('Пароли не совпадают.'); return; }
-    const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
-    try { const j=await api('register',{login:regLogin.value.trim(),email:regEmail.value.trim(),password:regPassword.value,robot:robotCheck.checked}); renderAccount(j.account); }
-    catch(err){ showError(err.message); } finally { btn.disabled=false; }
-  });
-  document.getElementById('logoutAccount').addEventListener('click',async()=>{ try{await api('logout'); guest.style.display='block'; profile.style.display='none'; setTab('login'); loginPassword.value='';}catch(e){showError(e.message);} });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&accountModal.classList.contains('show'))closeAccount();});
+  function setTheme(theme){document.body.classList.toggle('light-theme',theme==='light');localStorage.setItem(themeKey,theme);themeIcon.innerHTML=theme==='light'?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>':'<path d="M20.5 14.7A8.5 8.5 0 0 1 9.3 3.5 8.5 8.5 0 1 0 20.5 14.7Z"/>'}
+  langToggle.addEventListener('click',e=>{e.stopPropagation();langMenu.classList.toggle('show')});document.addEventListener('click',()=>langMenu.classList.remove('show'));langMenu.addEventListener('click',e=>e.stopPropagation());document.querySelectorAll('.lang-option').forEach(b=>b.addEventListener('click',()=>{setLang(b.dataset.lang);langMenu.classList.remove('show')}));themeToggle.addEventListener('click',()=>setTheme(document.body.classList.contains('light-theme')?'dark':'light'));
+  const icons={rocket:'<svg viewBox="0 0 24 24"><path d="M14 4c2-2 5-2 6-2 0 1 0 4-2 6l-5 5-4-4 5-5Z"/><path d="M9 15 5 19M5 19l-2 3 3-2M8 7H4l-2 3 6 1M17 16v4l-3 2-1-6"/><circle cx="17" cy="6" r="1.5"/></svg>',diamond:'<svg viewBox="0 0 24 24"><path d="m12 3 7 7-7 11L5 10l7-7Z"/><path d="M5 10h14M9 10l3 11 3-11-3-7-3 7Z"/></svg>',layout:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg>',bolt:'<svg viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="m19.4 15 .1.1a2 2 0 1 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4v.2a2 2 0 1 1-4 0v-.2A2 2 0 0 0 5.8 17.8l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A2 2 0 0 0 1.6 12a2 2 0 1 1 4 0v.2A2 2 0 0 0 9 10.8l.2-.1A2 2 0 1 1 12 8l-.1.1A2 2 0 0 0 15.3 9.5V9.3a2 2 0 1 1 4 0v.2a2 2 0 0 0 .1 5.5Z"/></svg>'};
+  document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icons[el.dataset.icon]||'');
+  setLang(localStorage.getItem(langKey)||'ru');setTheme(localStorage.getItem(themeKey)||'dark');
 })();
 </script>
-<script id="fundlc-tab-active">
-(function(){
- const tabs=[...document.querySelectorAll('.fundlc-tabs .nav-tab')];
- function active(id){tabs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));}
- tabs.forEach(a=>a.addEventListener('click',()=>{const h=a.getAttribute('href')||''; if(h.startsWith('#')) active(h.slice(1));}));
- const sections=tabs.map(a=>(a.getAttribute('href')||'').slice(1)).map(id=>document.getElementById(id)).filter(Boolean);
- if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting) active(e.target.id)}),{rootMargin:'-25% 0px -65% 0px'}); sections.forEach(x=>io.observe(x));}
-})();
-</script>
+
 </body>
 </html>
 
