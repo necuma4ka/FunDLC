@@ -85,7 +85,7 @@ html,body{font-family:Inter,Arial,sans-serif}
 .footer{font-family:Inter,Arial,sans-serif;font-size:12px}
 .hero h1{font-family:'Press Start 2P',monospace;font-size:clamp(42px,7vw,78px);line-height:1.08;letter-spacing:-3px}
 .hero p,.sub,.card p,.why p,.purchase-modal>p{font-family:Inter,Arial,sans-serif}
-@font-face{font-family:'FunDLC Minecraft';src:url('assets/fonts/minecraft.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'FunDLC Minecraft';src:url('./assets/fonts/minecraft.ttf') format('truetype');font-display:swap}
 .logo,.badge,.links,.btn,.card h3,.tag,.price,.features,.modal-badge,.purchase-modal h2,.slider-value,.slider-labels,.confirm-buy,.hero h1{font-family:'FunDLC Minecraft',monospace}
 
 /* Tighten the Minecraft font where its punctuation has oversized metrics. */
@@ -159,20 +159,7 @@ html{scroll-behavior:smooth}
 img[src*="gold_block_icon"], img[src*="diamond_block_icon"] { background: transparent !important; }
 </style>
 
-<style id="minecraft-font-force">
-@font-face {
-  font-family: "FunDLCMinecraft";
-  src: url("./assets/fonts/minecraft.ttf?v=3") format("truetype");
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-}
-html, body,
-body *, body *::before, body *::after,
-button, input, textarea, select, option {
-  font-family: "FunDLCMinecraft" !important;
-}
-</style>
+
 
 
 <title>FunDLC — Minecraft Client</title>
@@ -288,6 +275,20 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 }
 </style>
 
+<style id="product-images-fix">
+.card.subscription .basic-diamond-icon img,
+.card.subscription .beta-netherite-icon img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+</style>
+
 <style id="fundlc-hero-stats">
 .hero-stats{display:flex;justify-content:center;gap:12px;margin:24px auto 4px;flex-wrap:wrap}
 .hero-stat{min-width:155px;padding:13px 18px;border:1px solid var(--line);background:rgba(16,18,23,.58);border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 12px 35px rgba(0,0,0,.12);backdrop-filter:blur(8px)}
@@ -296,7 +297,7 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--line);box-shadow:0 12px 30px rgba(30,38,55,.08)}
 @media(max-width:520px){.hero-stats{gap:8px}.hero-stat{min-width:135px;padding:11px 14px}.hero-stat strong{font-size:16px}}
 </style>
-</head>
+<style id="fundlc-faq-style">.faq details{position:relative;margin:0 0 12px;padding:0;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025);overflow:hidden;transition:.25s}.faq details:hover{border-color:#ff9a4a55;transform:translateY(-1px)}.faq summary{list-style:none;position:relative;padding:19px 54px 19px 20px;font-size:15px;line-height:1.45;cursor:pointer;font-weight:800;transition:.2s}.faq summary::-webkit-details-marker{display:none}.faq summary::after{content:'+';position:absolute;right:19px;top:50%;transform:translateY(-50%);width:27px;height:27px;border-radius:9px;display:grid;place-items:center;color:var(--accent);border:1px solid #ff8a2a55;background:#ff8a2a10;font-size:20px;font-weight:500}.faq details[open] summary{color:var(--accent);background:#ff8a2a08}.faq details[open] summary::after{content:'−';transform:translateY(-50%) rotate(180deg)}.faq p{margin:0;padding:0 20px 20px;color:var(--muted);line-height:1.7;font-size:14px}body.light-theme .faq details{background:#fff;border-color:#eadfd7;box-shadow:0 8px 28px rgba(255,106,0,.06)}body.light-theme .faq details:hover{border-color:#ffb06b;box-shadow:0 10px 30px rgba(255,106,0,.11)}body.light-theme .faq summary{color:#4a3d35}body.light-theme .faq details[open] summary{color:#f47b20;background:#fff7f0}body.light-theme .faq summary::after{color:#f47b20;border-color:#ffb06b;background:#fff3e8}body.light-theme .faq p{color:#68707c}body.light-theme .footer{color:#8b7d73}body.light-theme .footer div:last-child{color:#f47b20;font-weight:700}</style></head>
 
 <script>/* Flags are embedded locally as PNG data URLs for reliable rendering. */</script>
 
@@ -383,7 +384,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
   <div class="sub" data-i18n="accessSub">Простые тарифы без лишнего.</div>
   <div class="grid">
     <article class="card subscription" data-plan="basic">
-      <div class="icon basic-diamond-icon" aria-label="Оранжевый кристалл"><img src="assets/icons/basic.png" alt="Оранжевый кристалл"></div>
+      <div class="icon basic-diamond-icon" aria-label="Оранжевый кристалл"><img src="./assets/icons/basic.png" alt="Оранжевый кристалл"></div>
       <h3>FunDLC Basic</h3>
       <p data-i18n="basicText">Основная версия клиента для комфортной игры.</p>
       <div class="beta-only">
@@ -391,13 +392,13 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
         <div data-i18n="basicF2">✓ Настраиваемый интерфейс</div>
         <div data-i18n="basicF3">✓ Регулярные обновления</div>
       </div>
-      <div class="price">от 149р</div>
+      <div class="price">от 149р <small>/ навсегда</small></div>
       <button class="btn primary full buy-btn open-basic" data-i18n="buy">Купить</button>
     </article>
 
     <article class="card featured subscription" data-plan="beta">
       <div class="tag">BETA</div>
-      <div class="icon beta-netherite-icon" aria-label="Синий кристалл"><img src="assets/icons/beta.png" alt="Синий кристалл"></div>
+      <div class="icon beta-netherite-icon" aria-label="Синий кристалл"><img src="./assets/icons/beta.png" alt="Синий кристалл"></div>
       <h3>FunDLC Beta</h3>
       <p data-i18n="betaText">Доступ к Beta-версии клиента. Подписка доступна только навсегда.</p>
       <div class="price">1 999 ₽ <small>/ навсегда</small></div>
@@ -493,7 +494,7 @@ body.light-theme .hero-stat{background:rgba(255,255,255,.72);border-color:var(--
     <div id="accountProfile" style="display:none">
       <div class="account-profile">
         <div class="avatar-wrap">
-          <img class="profile-avatar profile-avatar-img" id="profileAvatarImg" src="assets/images/avatar-default.jpg" alt="Аватар аккаунта">
+          <img class="profile-avatar profile-avatar-img" id="profileAvatarImg" src="./assets/images/avatar-default.jpg" alt="Аватар аккаунта">
           <div class="avatar-fallback profile-avatar" id="profileAvatarFallback">F</div>
         </div>
         <div class="profile-main"><strong id="profileName">Игрок</strong><span id="profileEmail">E-mail</span></div>
