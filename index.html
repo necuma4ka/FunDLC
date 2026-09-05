@@ -306,6 +306,39 @@ button, input, textarea, select, option {
 
 <footer class="footer"><div>© 2026 FunDLC. All rights reserved.</div><div>Discord • Support • Terms</div></footer>
 
+
+<script>
+(function(){
+  const KEY='fundlc_login_v2';
+  const TTL=31*24*60*60*1000;
+
+  window.FunDLCAuth={
+    save:function(account){
+      try{
+        localStorage.setItem(KEY, JSON.stringify({
+          account: account,
+          expiresAt: Date.now()+TTL
+        }));
+      }catch(e){}
+    },
+    load:function(){
+      try{
+        const x=JSON.parse(localStorage.getItem(KEY)||'null');
+        if(!x || !x.account || !x.expiresAt) return null;
+        if(Date.now() >= x.expiresAt){
+          localStorage.removeItem(KEY);
+          return null;
+        }
+        return x.account;
+      }catch(e){ return null; }
+    },
+    clear:function(){
+      try{localStorage.removeItem(KEY);}catch(e){}
+    }
+  };
+})();
+</script>
+
 <script>
 (() => {
   const accountModal = document.getElementById('accountModal');
@@ -639,3 +672,44 @@ button, input, textarea, select, option {
 </script>
 </body>
 </html>
+
+<script>
+(function(){
+  function install(){
+    if(typeof window.renderAccount!=='function' || window.renderAccount.__remembered) return;
+    const old=window.renderAccount;
+    function wrapped(account){
+      if(window.FunDLCAuth && account) window.FunDLCAuth.save(account);
+      return old.apply(this,arguments);
+    }
+    wrapped.__remembered=true;
+    window.renderAccount=wrapped;
+  }
+  const t=setInterval(install,100);
+  setTimeout(function(){clearInterval(t);install();},10000);
+})();
+</script>
+
+<script>
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    try{
+      const account=window.FunDLCAuth && window.FunDLCAuth.load();
+      if(account && typeof window.renderAccount==='function'){
+        window.renderAccount(account);
+      }
+    }catch(e){}
+  },250);
+});
+</script>
+
+<script>
+document.addEventListener('click',function(e){
+  const el=e.target.closest('button,a');
+  if(!el) return;
+  const text=(el.textContent||'').trim().toLowerCase();
+  if(text.includes('выйти') || text.includes('logout')){
+    if(window.FunDLCAuth) window.FunDLCAuth.clear();
+  }
+});
+</script>
