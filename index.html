@@ -179,6 +179,16 @@ html,body{background:#07080b}
 }
 </style>
 
+
+<meta name="application-name" content="FunDLC">
+<meta name="apple-mobile-web-app-title" content="FunDLC">
+<meta name="description" content="FunDLC — Minecraft Client">
+<meta name="theme-color" content="#0b0c10">
+
+<style id="fundlc-multipage">
+.account-modal{width:100vw!important;max-width:none!important;height:100dvh!important;min-height:100vh;border:0!important;border-radius:0!important;padding:0!important;margin:0!important;overflow:auto!important}
+.account-modal .modal-close{position:fixed!important;left:22px!important;top:18px!important;right:auto!important;z-index:1000!important}
+</style>
 </head>
 
 <script>
@@ -216,6 +226,18 @@ html,body{background:#07080b}
 })();
 </script>
 
+
+<script>
+(function(){
+  const KEY='fundlc_persistent_session_v4';
+  const TTL=31*24*60*60*1000;
+  window.FunDLCSession={
+    save(a){if(a)try{localStorage.setItem(KEY,JSON.stringify({account:a,expiresAt:Date.now()+TTL}))}catch(e){}},
+    load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(!x||!x.account||Date.now()>=x.expiresAt){localStorage.removeItem(KEY);return null}return x.account}catch(e){return null}},
+    clear(){try{localStorage.removeItem(KEY)}catch(e){}}
+  };
+})();
+</script>
 <body>
 <nav class="nav">
   <a class="logo" href="#top">Fun<span>DLC</span></a>
@@ -626,109 +648,7 @@ html,body{background:#07080b}
 })();
 </script>
 
-<script>
-(() => {
-  const accountModal = document.getElementById('accountModal');
-  const openAccount = document.querySelector('.account-open');
-  const guest = document.getElementById('authGuest');
-  const profile = document.getElementById('accountProfile');
-  const title = document.getElementById('authTitle');
-  const intro = document.getElementById('accountIntro');
-  const error = document.getElementById('authError');
-  const closeAccount = () => { accountModal.classList.remove('show'); document.body.style.overflow=''; };
-  // API lives next to this page. URL() also works when the site is inside a subfolder.
-  const API_URL = new URL('', window.location.href).href;
 
-  const api = async (action, data={}) => {
-    let r;
-    try {
-      r = await fetch(API_URL + '?action=' + encodeURIComponent(action), {
-        method: 'POST',
-        headers: {'Content-Type':'application/json', 'Accept':'application/json'},
-        credentials: 'same-origin',
-        cache: 'no-store',
-        body: JSON.stringify(data)
-      });
-    } catch (networkError) {
-      throw new Error(
-        'Не удалось подключиться к серверу. Проверь, что сайт открыт через PHP-хостинг (http/https), а файл  находится рядом с FunDLC_site.html. Не открывай страницу через file://.'
-      );
-    }
-
-    const text = await r.text();
-    let j;
-    try {
-      j = JSON.parse(text);
-    } catch (_) {
-      throw new Error(
-        'Сервер  вернул не JSON (HTTP ' + r.status + '). Проверь, что PHP включён и  доступен.'
-      );
-    }
-
-    if (!r.ok || !j.ok) throw new Error(j.error || ('Ошибка сервера HTTP ' + r.status + '.'));
-    return j;
-  };
-  function showError(msg, success=false){ error.textContent=msg; error.classList.toggle('auth-success',success); error.style.display='block'; }
-  function clearError(){ error.style.display='none'; error.classList.remove('auth-success'); }
-  function setTab(tab){
-    clearError();
-    document.querySelectorAll('.auth-tab').forEach(b=>b.classList.toggle('active',b.dataset.authTab===tab));
-    document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
-    document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
-    title.textContent=tab==='login'?'Авторизация':'Регистрация';
-    intro.textContent=tab==='login'?'Войди в свой аккаунт FunDLC.':'Создай аккаунт FunDLC.';
-  }
-  function renderAccount(a){
-    guest.style.display='none'; profile.style.display='block'; title.classList.add('minecraft-text'); title.textContent='Личный кабинет'; intro.textContent='Данные твоего аккаунта FunDLC.';
-    document.getElementById('profileName').textContent=a.login; document.getElementById('profileEmail').textContent=a.email;
-    document.getElementById('profileAvatar').textContent=a.login.charAt(0).toUpperCase();
-    document.getElementById('profileUid').textContent=a.uid; document.getElementById('profileUuid').textContent=a.uuid;
-    document.getElementById('profileLogin').textContent=a.login; document.getElementById('profileGroup').textContent=a.group;
-    document.getElementById('profileCreated').textContent=a.created_at; document.getElementById('profileLastLogin').textContent=a.last_login;
-    document.getElementById('profilePlan').textContent=a.plan || 'Нет подписки';
-  }
-  async function loadSession(){
-    try {
-      const r = await fetch(API_URL + '?action=me', {
-        method:'GET',
-        credentials:'same-origin',
-        cache:'no-store',
-        headers:{'Accept':'application/json'}
-      });
-      const text = await r.text();
-      let j;
-      try { j = JSON.parse(text); }
-      catch (_) { throw new Error('Сервер  вернул не JSON (HTTP ' + r.status + ').'); }
-      if (!r.ok || !j.ok) throw new Error(j.error || ('Ошибка сервера HTTP ' + r.status + '.'));
-      if(j.account) renderAccount(j.account);
-      else { guest.style.display='block'; profile.style.display='none'; setTab('login'); }
-    } catch(e){
-      guest.style.display='block';
-      profile.style.display='none';
-      setTab('login');
-      // Don't hide the real connection problem behind a generic "Failed to fetch".
-      showError(e.message || 'Не удалось подключиться к серверу.');
-    }
-  }
-  openAccount.addEventListener('click', async()=>{ accountModal.classList.add('show'); document.body.style.overflow='hidden'; await loadSession(); });
-  document.querySelector('.account-close').addEventListener('click',closeAccount); document.querySelector('.account-backdrop').addEventListener('click',closeAccount);
-  document.querySelectorAll('.auth-tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.authTab)));
-  document.getElementById('loginForm').addEventListener('submit',async e=>{
-    e.preventDefault(); clearError(); const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
-    try { const j=await api('login',{identity:loginIdentity.value.trim(),password:loginPassword.value,remember:rememberMe.checked}); renderAccount(j.account); }
-    catch(err){ showError(err.message); } finally { btn.disabled=false; }
-  });
-  document.getElementById('registerForm').addEventListener('submit',async e=>{
-    e.preventDefault(); clearError();
-    if(regPassword.value!==regPassword2.value){ showError('Пароли не совпадают.'); return; }
-    const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
-    try { const j=await api('register',{login:regLogin.value.trim(),email:regEmail.value.trim(),password:regPassword.value,robot:robotCheck.checked}); renderAccount(j.account); }
-    catch(err){ showError(err.message); } finally { btn.disabled=false; }
-  });
-  document.getElementById('logoutAccount').addEventListener('click',async()=>{ try{await api('logout'); guest.style.display='block'; profile.style.display='none'; setTab('login'); loginPassword.value='';}catch(e){showError(e.message);} });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&accountModal.classList.contains('show'))closeAccount();});
-})();
-</script>
 </body>
 </html>
 
@@ -790,4 +710,53 @@ document.addEventListener('click',function(e){
     if(window.FunDLCSession) window.FunDLCSession.clear();
   }
 });
+</script>
+
+<script>
+(function(){
+  function install(){
+    if(typeof window.renderAccount!=='function'||window.renderAccount.__fundlcPersistent)return;
+    const old=window.renderAccount;
+    function wrapped(a){if(a&&window.FunDLCSession)window.FunDLCSession.save(a);return old.apply(this,arguments)}
+    wrapped.__fundlcPersistent=true; window.renderAccount=wrapped;
+    const saved=window.FunDLCSession.load();
+    if(saved)setTimeout(()=>{try{window.renderAccount(saved)}catch(e){}},80);
+  }
+  const t=setInterval(install,100);
+  setTimeout(()=>{clearInterval(t);install()},12000);
+})();
+</script>
+
+<script>
+(function(){
+  const root='/FunDLC/';
+  function cleanPath(){
+    const p=location.pathname.replace(/\/+$/,'')||'/FunDLC';
+    return p;
+  }
+  function go(path){
+    history.pushState({fundlc:true},'',root+path+'/');
+    if(path==='account') openCabinet();
+    else if(typeof closeAccount==='function') closeAccount();
+    window.scrollTo(0,0);
+  }
+  function openCabinet(){
+    const m=document.getElementById('accountModal');
+    if(m){m.classList.add('active');m.style.display='flex';}
+    document.body.classList.add('modal-open');
+  }
+  function sync(){
+    if(cleanPath()===root+'account') setTimeout(openCabinet,30);
+  }
+  document.addEventListener('click',function(e){
+    const a=e.target.closest('a[href]');
+    if(!a)return;
+    const href=a.getAttribute('href');
+    if(href==='./account/'||href==='/FunDLC/account/'){
+      e.preventDefault();go('account');
+    }
+  });
+  window.addEventListener('popstate',sync);
+  window.addEventListener('load',sync);
+})();
 </script>
