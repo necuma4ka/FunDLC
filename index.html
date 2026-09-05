@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FunDLC — Minecraft Client</title>
+<style>
+:root{--bg:#07080b;--card:#101217;--muted:#969ba8;--text:#f4f5f7;--accent:#ff6a00;--accent2:#ff9a3d;--line:#20232b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#2a1609 0,#07080b 42%);color:var(--text);font-family:Inter,Arial,sans-serif}
+a{text-decoration:none;color:inherit}.nav{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:#08090cf2;backdrop-filter:blur(12px);position:sticky;top:0;z-index:5}
+.logo{font-size:25px;font-weight:900;letter-spacing:-1px}.logo span{color:var(--accent)}.links{display:flex;gap:28px;color:#b7bbc5;font-size:14px}.links a:hover{color:white}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid #353944;border-radius:10px;padding:11px 17px;font-weight:700;font-size:14px}.btn.primary{background:linear-gradient(135deg,var(--accent),#ff8a2a);border:0;color:#120b05;box-shadow:0 8px 30px #ff6a0033}.hero{max-width:1120px;margin:0 auto;padding:105px 24px 80px;text-align:center}.badge{display:inline-block;padding:7px 12px;border:1px solid #3a271a;background:#17100a;color:#ffab63;border-radius:999px;font-size:12px;font-weight:800}.hero h1{font-size:clamp(48px,8vw,92px);line-height:.95;letter-spacing:-5px;margin:24px 0 20px}.hero h1 span{color:var(--accent)}.hero p{max-width:650px;margin:0 auto 30px;color:var(--muted);font-size:17px;line-height:1.7}.actions{display:flex;gap:12px;justify-content:center}.section{max-width:1120px;margin:auto;padding:40px 24px 90px}.section h2{font-size:32px;margin:0 0 10px}.sub{color:var(--muted);margin-bottom:30px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:linear-gradient(180deg,#111319,#0d0f14);border:1px solid var(--line);border-radius:18px;padding:25px;position:relative;overflow:hidden}.card.featured{border-color:#713715;box-shadow:0 15px 50px #ff6a0010}.tag{position:absolute;right:18px;top:18px;background:#25160b;color:#ff9b4a;padding:5px 9px;border-radius:7px;font-size:10px;font-weight:900}.icon{width:44px;height:44px;border-radius:12px;background:#1b130d;border:1px solid #3a2516;display:grid;place-items:center;font-size:22px;margin-bottom:20px}.card h3{margin:0 0 8px;font-size:21px}.card p{color:var(--muted);font-size:13px;line-height:1.6;min-height:62px}.price{font-size:31px;font-weight:900;margin:18px 0}.price small{font-size:12px;color:var(--muted);font-weight:500}.features{list-style:none;padding:0;margin:18px 0 24px;color:#c7cad2;font-size:13px;line-height:2}.features li::before{content:"✓";color:var(--accent);font-weight:900;margin-right:8px}.full{width:100%}.why{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.why .card{min-height:155px}.why h3{margin:0 0 8px}.why p{color:var(--muted);font-size:13px;line-height:1.6}.faq{max-width:800px}.faq details{border-bottom:1px solid var(--line);padding:19px 0;color:#ddd}.faq summary{cursor:pointer;font-weight:700}.faq p{color:var(--muted);line-height:1.6;font-size:14px}.footer{border-top:1px solid var(--line);padding:30px 7%;display:flex;justify-content:space-between;color:#777;font-size:12px}.notice{margin-top:20px;color:#666;font-size:11px}
+@media(max-width:760px){.links{display:none}.grid,.why{grid-template-columns:1fr}.hero{padding-top:75px}.hero h1{letter-spacing:-3px}.footer{display:block}.footer div+div{margin-top:8px}}
+
+.beta-only{margin:18px 0 24px;color:#c7cad2;font-family:Inter,Arial,sans-serif;font-size:13px;line-height:2.1}
+.subscription{display:flex;flex-direction:column}.subscription .price{min-height:38px}.subscription .buy-btn{margin-top:auto}
+
+
+.modal{display:none;position:fixed;inset:0;z-index:20;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:#000b;backdrop-filter:blur(8px)}
+.purchase-modal{position:relative;width:min(500px,100%);background:linear-gradient(180deg,#15171d,#0c0e13);border:1px solid #30343e;border-radius:22px;padding:30px;box-shadow:0 30px 100px #000;animation:modalIn .2s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.modal-close{position:absolute;right:18px;top:15px;background:none;border:0;color:#8d919b;font-size:28px;cursor:pointer}
+.modal-badge{display:inline-block;color:#ff963f;background:#24150a;border:1px solid #573017;border-radius:7px;padding:5px 9px;font-size:10px;font-weight:900}
+.purchase-modal h2{font-size:28px;margin:16px 0 7px}.purchase-modal>p{color:#858a96;font-size:13px;margin:0 0 28px}
+.slider-wrap{background:#0a0c10;border:1px solid #252933;border-radius:15px;padding:22px 20px 18px}
+.slider-value{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:20px;font-weight:900}
+.slider-value strong{color:#ff8a32}
+input[type=range]{appearance:none;width:100%;height:7px;border-radius:99px;background:linear-gradient(90deg,#ff6a00 0%,#ff6a00 var(--fill,25%),#292d35 var(--fill,25%),#292d35 100%);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:24px;height:24px;border-radius:50%;background:#ff8a32;border:4px solid #17100a;box-shadow:0 0 0 2px #ff6a00,0 4px 15px #ff6a0066}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#ff8a32;border:4px solid #17100a;box-shadow:0 0 0 2px #ff6a00}
+.slider-labels{display:flex;justify-content:space-between;color:#666b76;font-size:11px;font-weight:800;margin-top:12px}
+.purchase-summary{display:flex;justify-content:space-between;align-items:center;border:1px solid #252933;background:#111319;border-radius:12px;padding:15px;margin:16px 0 18px;font-size:13px;color:#9a9faa}
+.purchase-summary b{color:#eee}
+button.btn{font-family:inherit;cursor:pointer}
+
+input[type=range]{transition:filter .25s ease,transform .15s ease}
+input[type=range]:hover{filter:brightness(1.12)}
+input[type=range]:active{transform:scaleY(1.18)}
+.slider-value{transition:transform .22s ease}
+.slider-value.bump{animation:valueBump .25s ease}
+@keyframes valueBump{0%{transform:scale(1)}45%{transform:scale(1.06)}100%{transform:scale(1)}}
+.purchase-modal .confirm-buy{transition:transform .2s ease,box-shadow .2s ease}
+.purchase-modal .confirm-buy:hover{transform:translateY(-2px);box-shadow:0 10px 28px #ff6a0044}
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+html,body{font-family:Inter,Arial,sans-serif}
+.logo,.badge,.links,.btn,.card h3,.tag,.price,.features,.icon,
+.modal-badge,.purchase-modal h2,.slider-value,.slider-labels,
+.purchase-summary,.confirm-buy,.footer{font-family:'Press Start 2P',monospace}
+.logo{font-size:20px;letter-spacing:-1px}
+.btn{font-size:11px;line-height:1.5}
+.card h3{font-size:15px;line-height:1.5}
+.price{font-size:20px;line-height:1.5}
+.badge,.tag,.modal-badge{font-size:8px}
+.links,.features,.footer{font-size:9px}
+.slider-value{font-size:14px}
+.slider-labels{font-size:8px}
+
+.slider-wrap{position:relative;overflow:hidden}
+.particle-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.slider-wrap>*:not(.particle-canvas){position:relative;z-index:1}
+
+/* Improved Minecraft-style typography */
+.logo,.badge,.links,.btn,.card h3,.tag,.price,.features,.icon,
+.modal-badge,.purchase-modal h2,.slider-value,.slider-labels,
+.purchase-summary,.confirm-buy,.footer{
+  font-family:'Press Start 2P',monospace;
+  text-rendering:geometricPrecision;
+}
+.logo{font-size:25px;line-height:1.2;letter-spacing:-1px}
+.links{font-size:12px}
+.btn{font-size:12px;line-height:1.45;padding:13px 18px}
+.badge{font-size:10px;padding:8px 13px}
+.card h3{font-size:18px;line-height:1.45}
+.price{font-size:25px;line-height:1.4}
+.price small{font-family:Inter,Arial,sans-serif;font-size:12px}
+.tag,.modal-badge{font-size:9px}
+.features{font-family:Inter,Arial,sans-serif;font-size:13px}
+.icon{font-family:Inter,Arial,sans-serif;font-size:22px}
+.slider-value{font-size:17px}
+.slider-labels{font-size:10px}
+.purchase-modal h2{font-size:24px;line-height:1.5}
+.purchase-summary{font-family:Inter,Arial,sans-serif;font-size:14px}
+.confirm-buy{font-size:12px}
+.footer{font-family:Inter,Arial,sans-serif;font-size:12px}
+.hero h1{font-family:'Press Start 2P',monospace;font-size:clamp(42px,7vw,78px);line-height:1.08;letter-spacing:-3px}
+.hero p,.sub,.card p,.why p,.purchase-modal>p{font-family:Inter,Arial,sans-serif}
+@font-face{font-family:'FunDLC Minecraft';src:url('minecraft.ttf') format('truetype');font-display:swap}
+.logo,.badge,.links,.btn,.card h3,.tag,.price,.features,.modal-badge,.purchase-modal h2,.slider-value,.slider-labels,.confirm-buy,.hero h1{font-family:'FunDLC Minecraft',monospace}
+
+/* Tighten the Minecraft font where its punctuation has oversized metrics. */
+.hero h1{word-spacing:-3px}
+.hero h1 .tight-hyphen{letter-spacing:-1px;margin-left:-2px}
+
+/* Uploaded Minecraft font applied to Russian and English UI text */
+.hero h1,.logo,.badge,.links,.btn,.card h3,.tag,.price,.features,
+.beta-only,.modal-badge,.purchase-modal h2,.slider-value,.slider-labels,
+.purchase-summary,.confirm-buy,.footer,.card p,.section h2,.sub{
+  font-family:'FunDLC Minecraft',monospace;
+  font-weight:normal;
+}
+.hero h1{letter-spacing:-2px;word-spacing:-2px}
+.card p,.sub{line-height:1.75}
+.features,.beta-only{line-height:2}
+
+.nav{gap:24px}
+.nav .logo{flex-shrink:0}
+.links{display:flex;align-items:center;gap:12px;margin-left:auto}
+.links>a:not(.nav-buy),.nav-link{padding:10px 12px;border:1px solid transparent;border-radius:9px;color:#b7bbc5;background:none}
+.links>a:not(.nav-buy):hover,.nav-link:hover{color:#fff;background:#12151b;border-color:#292d36}
+.nav-link{font-size:12px;cursor:pointer}
+.nav-buy{margin-left:2px}
+.account-label{display:block;color:#8d929d;font-size:11px;margin:0 0 8px}
+.account-input{width:100%;padding:13px 14px;border-radius:10px;border:1px solid #2b2f38;background:#0a0c10;color:#fff;outline:none;margin-bottom:14px;font:inherit}
+.account-input:focus{border-color:#ff6a00;box-shadow:0 0 0 3px #ff6a0018}
+.account-profile{display:flex;align-items:center;gap:14px;border:1px solid #292d36;background:#0d1015;border-radius:13px;padding:14px;margin:10px 0 14px}
+.profile-avatar{width:44px;height:44px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#ff6a00,#ff9a3d);color:#160b03;font-size:18px;font-weight:900}
+.account-profile strong,.account-profile span{display:block}
+.account-profile span{color:#777d88;font-size:11px;margin-top:5px}
+@media(max-width:760px){.links{gap:4px}.links>a:not(.nav-buy),.nav-link{font-size:9px;padding:8px 6px}.nav{padding:0 4%}.nav .logo{font-size:18px}}
+
+.auth-tabs{display:flex;gap:6px;background:#0a0c10;border:1px solid #252933;border-radius:11px;padding:4px;margin:0 0 18px}.auth-tab{flex:1;border:0;background:transparent;color:#777d88;padding:11px;border-radius:8px;cursor:pointer;font:inherit}.auth-tab.active{background:#ff6a00;color:#160b03}.auth-error{display:none;background:#2a1010;border:1px solid #612525;color:#ff9b9b;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:14px}.auth-success{background:#102718;border-color:#245d34;color:#9ff0b3}.auth-field{margin-bottom:12px}.auth-field:last-of-type{margin-bottom:16px}.auth-meta{font-size:11px;color:#666b76;line-height:1.6;margin-top:10px}.cabinet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.cabinet-row{display:flex;justify-content:space-between;gap:10px;border:1px solid #252933;background:#0d1015;border-radius:10px;padding:11px 12px;font-size:11px}.cabinet-row span{color:#777d88}.cabinet-row b{color:#eee;text-align:right;overflow:hidden;text-overflow:ellipsis}.danger{border-color:#572424!important;color:#ff9b9b!important}.account-modal{width:min(560px,100%)}@media(max-width:520px){.cabinet-grid{grid-template-columns:1fr}}
+</style>
+
+<style id="minecraft-font-force">
+@font-face {
+  font-family: "FunDLCMinecraft";
+  src: url("./minecraft.ttf?v=3") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}
+html, body,
+body *, body *::before, body *::after,
+button, input, textarea, select, option {
+  font-family: "FunDLCMinecraft" !important;
+}
+</style>
+
+</head>
+<body>
+<nav class="nav">
+  <a class="logo" href="#top">Fun<span>DLC</span></a>
+  <div class="links">
+    <a href="https://discord.gg/nursultan" target="_blank" rel="noopener">Поддержка</a>
+    <a href="https://nursultan.fun/money-per-video" target="_blank" rel="noopener">Деньги за видео</a>
+    <button class="nav-link account-open minecraft-text" type="button">Личный кабинет</button>
+    <a class="btn primary nav-buy" href="https://nursultan.fun/products" target="_blank" rel="noopener">Купить</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="badge">MINECRAFT CLIENT • FUN SERIES</div>
+  <h1>Играй по-<span class="tight-hyphen">своему.</span><br><span>FunDLC.</span></h1>
+  <p>Современный Minecraft-клиент с удобным интерфейсом, настройками модулей и акцентом на производительность.</p>
+  <div class="actions"><a class="btn primary" href="#clients">Выбрать версию</a><a class="btn" href="#why">Подробнее</a></div>
+  <div class="notice">Используй сторонние клиенты только там, где это разрешено правилами сервера.</div>
+</header>
+
+<section class="section" id="clients">
+  <h2>Выбери доступ</h2>
+  <div class="sub">Простые тарифы без лишнего.</div>
+  <div class="grid">
+    <article class="card subscription" data-plan="basic">
+      <div class="icon">⚡</div>
+      <h3>FunDLC Basic</h3>
+      <p>Основная версия клиента для комфортной игры.</p>
+      <div class="beta-only">
+        <div>✓ Основные функции клиента</div>
+        <div>✓ Настраиваемый интерфейс</div>
+        <div>✓ Регулярные обновления</div>
+      </div>
+      <div class="price">Basic</div>
+      <button class="btn primary full buy-btn open-basic">Купить</button>
+    </article>
+
+    <article class="card featured subscription" data-plan="beta">
+      <div class="tag">BETA</div>
+      <div class="icon">✦</div>
+      <h3>FunDLC Beta</h3>
+      <p>Доступ к Beta-версии клиента. Подписка доступна только навсегда.</p>
+      <div class="price">1 999 ₽ <small>/ навсегда</small></div>
+      <div class="beta-only">
+        <div>✓ Lifetime-доступ</div>
+        <div>✓ Beta-функции</div>
+        <div>✓ Будущие обновления Beta</div>
+      </div>
+      <a class="btn primary full buy-btn" href="#">Купить Beta</a>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="why">
+  <h2>Почему FunDLC?</h2><div class="sub">Минимализм, скорость и удобство.</div>
+  <div class="why">
+    <div class="card"><div class="icon">◈</div><h3>Чистый интерфейс</h3><p>Ничего лишнего: быстрый доступ к настройкам и аккуратный HUD.</p></div>
+    <div class="card"><div class="icon">↯</div><h3>Производительность</h3><p>Оптимизированный интерфейс без ощущения перегруженности.</p></div>
+    <div class="card"><div class="icon">⚙</div><h3>Гибкие настройки</h3><p>Настраивай внешний вид и поведение доступных функций под себя.</p></div>
+  </div>
+</section>
+
+<section class="section faq" id="faq">
+  <h2>FAQ</h2><div class="sub">Частые вопросы.</div>
+  <details><summary>Какие версии Minecraft поддерживаются?</summary><p>Добавь сюда актуальный список версий твоего клиента, например 1.21.x.</p></details>
+  <details><summary>Как происходит покупка?</summary><p>После подключения платежной системы пользователь сможет оплатить выбранный тариф и получить доступ через личный кабинет.</p></details>
+  <details><summary>Можно ли использовать клиент на любом сервере?</summary><p>Нет. Всегда проверяй правила конкретного сервера: некоторые сторонние клиенты или отдельные функции запрещены.</p></details>
+</section>
+
+
+<div class="modal" id="basicModal">
+  <div class="modal-backdrop"></div>
+  <div class="purchase-modal">
+    <button class="modal-close" aria-label="Закрыть">×</button>
+    <div class="modal-badge">FUN DLC BASIC</div>
+    <h2>Выбери срок подписки</h2>
+    <p>Проведи ползунок и выбери нужный срок.</p>
+
+    <div class="slider-wrap"><canvas class="particle-canvas" id="particleCanvas"></canvas>
+      <div class="slider-value"><span id="daysValue">30 дней</span><strong id="daysPrice">249 ₽</strong></div>
+      <input id="daysSlider" type="range" min="0" max="4" step="1" value="1">
+      <div class="slider-labels">
+        <span>14д</span><span>30д</span><span>90д</span><span>180д</span><span>∞</span>
+      </div>
+    </div>
+
+    <div class="purchase-summary">
+      <span>FunDLC Basic</span>
+      <b id="summaryText">30 дней • 249 ₽</b>
+    </div>
+    <button class="btn primary full confirm-buy">Перейти к покупке</button>
+  </div>
+</div>
+
+
+<div class="modal" id="accountModal">
+  <div class="modal-backdrop account-backdrop"></div>
+  <div class="purchase-modal account-modal">
+    <button class="modal-close account-close" aria-label="Закрыть">×</button>
+    <div class="modal-badge">FUN DLC ACCOUNT</div>
+    <h2 id="authTitle">Авторизация</h2>
+    <p id="accountIntro">Войди в аккаунт или создай новый.</p>
+
+    <div id="authGuest">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login" type="button">Войти</button>
+        <button class="auth-tab" data-auth-tab="register" type="button">Регистрация</button>
+      </div>
+      <div class="auth-error" id="authError"></div>
+
+      <form id="loginForm">
+        <div class="auth-field"><label class="account-label">Логин или e-mail</label><input class="account-input" id="loginIdentity" type="text" maxlength="64" autocomplete="username" placeholder="Введите логин или e-mail" required></div>
+        <div class="auth-field"><label class="account-label">Пароль</label><input class="account-input" id="loginPassword" type="password" maxlength="128" autocomplete="current-password" placeholder="Введите пароль" required></div>
+        <label style="display:flex;gap:8px;align-items:center;color:#c7cad2;font-size:11px;margin:2px 0 16px"><input id="rememberMe" type="checkbox"> Запомнить меня</label>
+        <button class="btn primary full" type="submit">↪ Войти</button>
+      </form>
+
+      <form id="registerForm" style="display:none">
+        <div class="auth-field"><label class="account-label">Никнейм</label><input class="account-input" id="regLogin" type="text" maxlength="24" autocomplete="username" placeholder="Например, Nursultan" required></div>
+        <div class="auth-field"><label class="account-label">E-mail</label><input class="account-input" id="regEmail" type="email" maxlength="120" autocomplete="email" placeholder="name@example.com" required></div>
+        <div class="auth-field"><label class="account-label">Пароль</label><input class="account-input" id="regPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Минимум 8 символов" required></div>
+        <div class="auth-field"><label class="account-label">Повторите пароль</label><input class="account-input" id="regPassword2" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Повторите пароль" required></div>
+        <label style="display:flex;gap:8px;align-items:flex-start;color:#c7cad2;font-size:11px;line-height:1.5;margin:2px 0 16px"><input id="robotCheck" type="checkbox" required> Я подтверждаю, что я не робот</label>
+        <button class="btn primary full" type="submit">Создать аккаунт</button>
+        <div class="auth-meta">Пароль хранится на сервере только в виде безопасного хэша. UUID аккаунта создаётся автоматически.</div>
+      </form>
+    </div>
+
+    <div id="accountProfile" style="display:none">
+      <div class="account-profile">
+        <div class="profile-avatar" id="profileAvatar">F</div>
+        <div><strong id="profileName">Игрок</strong><span id="profileEmail">E-mail</span></div>
+      </div>
+      <div class="purchase-summary"><span>Статус</span><b>Аккаунт активен</b></div>
+      <div class="cabinet-grid">
+        <div class="cabinet-row"><span>UID</span><b id="profileUid">—</b></div>
+        <div class="cabinet-row"><span>UUID</span><b id="profileUuid">—</b></div>
+        <div class="cabinet-row"><span>Логин</span><b id="profileLogin">—</b></div>
+        <div class="cabinet-row"><span>Группа</span><b id="profileGroup">Пользователь</b></div>
+        <div class="cabinet-row"><span>Регистрация</span><b id="profileCreated">—</b></div>
+        <div class="cabinet-row"><span>Последний вход</span><b id="profileLastLogin">—</b></div>
+      </div>
+      <div class="purchase-summary" style="margin-top:10px"><span>Подписка</span><b id="profilePlan">Нет подписки</b></div>
+      <button class="btn full danger" id="logoutAccount" type="button">↪ Выйти</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer"><div>© 2026 FunDLC. All rights reserved.</div><div>Discord • Support • Terms</div></footer>
+
+<script>
+(() => {
+  const accountModal = document.getElementById('accountModal');
+  const openAccount = document.querySelector('.account-open');
+  const guest = document.getElementById('authGuest');
+  const profile = document.getElementById('accountProfile');
+  const title = document.getElementById('authTitle');
+  const intro = document.getElementById('accountIntro');
+  const error = document.getElementById('authError');
+
+  const closeAccount = () => {
+    accountModal.classList.remove('show');
+    document.body.style.overflow='';
+  };
+
+  const USERS_KEY='fundlc_users_v1';
+  const SESSION_KEY='fundlc_session_v1';
+
+  function users(){
+    try { return JSON.parse(localStorage.getItem(USERS_KEY)||'[]'); }
+    catch(e){ return []; }
+  }
+  function saveUsers(v){ localStorage.setItem(USERS_KEY, JSON.stringify(v)); }
+  function uid(){ return String(Math.floor(100000+Math.random()*900000)); }
+  function uuid(){
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+      const r=Math.random()*16|0, v=c==='x'?r:(r&3|8); return v.toString(16);
+    });
+  }
+  function now(){
+    return new Date().toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  function showError(msg,success=false){
+    error.textContent=msg;
+    error.classList.toggle('auth-success',success);
+    error.style.display='block';
+  }
+  function clearError(){
+    error.style.display='none';
+    error.classList.remove('auth-success');
+  }
+  function setTab(tab){
+    clearError();
+    document.querySelectorAll('.auth-tab').forEach(b=>b.classList.toggle('active',b.dataset.authTab===tab));
+    document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
+    document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
+    title.textContent=tab==='login'?'Авторизация':'Регистрация';
+    title.classList.add('minecraft-text');
+    intro.textContent=tab==='login'?'Войди в свой аккаунт FunDLC.':'Создай аккаунт FunDLC.';
+  }
+  function renderAccount(a){
+    guest.style.display='none';
+    profile.style.display='block';
+    title.classList.add('minecraft-text');
+    title.textContent='Личный кабинет';
+    intro.textContent='Данные твоего аккаунта FunDLC.';
+    document.getElementById('profileName').textContent=a.login;
+    document.getElementById('profileEmail').textContent=a.email;
+    document.getElementById('profileAvatar').textContent=a.login.charAt(0).toUpperCase();
+    document.getElementById('profileUid').textContent=a.uid;
+    document.getElementById('profileUuid').textContent=a.uuid;
+    document.getElementById('profileLogin').textContent=a.login;
+    document.getElementById('profileGroup').textContent=a.group;
+    document.getElementById('profileCreated').textContent=a.created_at;
+    document.getElementById('profileLastLogin').textContent=a.last_login;
+    document.getElementById('profilePlan').textContent=a.plan || 'Нет подписки';
+  }
+  function current(){
+    const id=localStorage.getItem(SESSION_KEY);
+    if(!id) return null;
+    return users().find(u=>u.uid===id)||null;
+  }
+  function loadSession(){
+    const a=current();
+    if(a) renderAccount(a);
+    else {
+      guest.style.display='block';
+      profile.style.display='none';
+      setTab('login');
+    }
+  }
+
+  openAccount.addEventListener('click',()=>{
+    accountModal.classList.add('show');
+    document.body.style.overflow='hidden';
+    loadSession();
+  });
+  document.querySelector('.account-close').addEventListener('click',closeAccount);
+  document.querySelector('.account-backdrop').addEventListener('click',closeAccount);
+  document.querySelectorAll('.auth-tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.authTab)));
+
+  document.getElementById('loginForm').addEventListener('submit',e=>{
+    e.preventDefault(); clearError();
+    const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
+    try{
+      const identity=loginIdentity.value.trim().toLowerCase();
+      const password=loginPassword.value;
+      const a=users().find(u=>u.login.toLowerCase()===identity || u.email.toLowerCase()===identity);
+      if(!a || a.password!==password) throw new Error('Неверный логин/email или пароль.');
+      a.last_login=now();
+      const list=users().map(u=>u.uid===a.uid?a:u);
+      saveUsers(list);
+      localStorage.setItem(SESSION_KEY,a.uid);
+      renderAccount(a);
+    }catch(err){ showError(err.message); }
+    finally{ btn.disabled=false; }
+  });
+
+  document.getElementById('registerForm').addEventListener('submit',e=>{
+    e.preventDefault(); clearError();
+    if(regPassword.value!==regPassword2.value){ showError('Пароли не совпадают.'); return; }
+    if(regPassword.value.length<4){ showError('Пароль должен содержать минимум 4 символа.'); return; }
+    const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
+    try{
+      if(!robotCheck.checked) throw new Error('Подтверди, что ты не робот.');
+      const login=regLogin.value.trim(), email=regEmail.value.trim().toLowerCase();
+      if(!login || !email) throw new Error('Заполни все поля.');
+      const list=users();
+      if(list.some(u=>u.login.toLowerCase()===login.toLowerCase())) throw new Error('Этот логин уже занят.');
+      if(list.some(u=>u.email.toLowerCase()===email)) throw new Error('Этот email уже зарегистрирован.');
+      const t=now();
+      const a={uid:uid(),uuid:uuid(),login,email,password:regPassword.value,group:'Пользователь',created_at:t,last_login:t,plan:'Нет подписки'};
+      list.push(a); saveUsers(list); localStorage.setItem(SESSION_KEY,a.uid); renderAccount(a);
+    }catch(err){ showError(err.message); }
+    finally{ btn.disabled=false; }
+  });
+
+  document.getElementById('logoutAccount').addEventListener('click',()=>{
+    localStorage.removeItem(SESSION_KEY);
+    guest.style.display='block';
+    profile.style.display='none';
+    setTab('login');
+    loginPassword.value='';
+  });
+
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&accountModal.classList.contains('show'))closeAccount();});
+})();
+</script>
+
+<script>
+(() => {
+  const canvas = document.getElementById('particleCanvas');
+  const slider = document.getElementById('daysSlider');
+  if (!canvas || !slider) return;
+
+  const ctx = canvas.getContext('2d');
+  const wrap = canvas.parentElement;
+  let particles = [];
+  let lastValue = Number(slider.value);
+
+  function resize(){
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = wrap.clientWidth * dpr;
+    canvas.height = wrap.clientHeight * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function sliderPoint(){
+    const rect = slider.getBoundingClientRect();
+    const wrect = wrap.getBoundingClientRect();
+    const progress = Number(slider.value) / Number(slider.max);
+    return {
+      x: (rect.left - wrect.left) + rect.width * progress,
+      y: (rect.top - wrect.top) + rect.height / 2
+    };
+  }
+
+  function burst(){
+    const p = sliderPoint();
+    for(let i=0;i<26;i++){
+      const a = Math.random() * Math.PI * 2;
+      const speed = 0.5 + Math.random() * 2.2;
+      particles.push({
+        x:p.x, y:p.y,
+        vx:Math.cos(a)*speed,
+        vy:Math.sin(a)*speed,
+        life:1,
+        size:1.2+Math.random()*2.8,
+        spin:Math.random()*Math.PI
+      });
+    }
+  }
+
+  function draw(){
+    const w=wrap.clientWidth,h=wrap.clientHeight;
+    ctx.clearRect(0,0,w,h);
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.018;
+      p.life-=0.018; p.size*=0.992; p.spin+=0.08;
+      if(p.life<=0){particles.splice(i,1);continue}
+      ctx.save();
+      ctx.globalAlpha=p.life*.85;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.spin);
+      ctx.fillStyle='#ff8a32';
+      ctx.shadowBlur=10;
+      ctx.shadowColor='#ff6a00';
+      ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);
+      ctx.restore();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  slider.addEventListener('input',()=>{
+    const v=Number(slider.value);
+    if(v!==lastValue){ burst(); lastValue=v; }
+  });
+
+  slider.addEventListener('pointerdown',burst);
+  burst();
+  draw();
+})();
+</script>
+
+<script>
+(() => {
+  const accountModal = document.getElementById('accountModal');
+  const openAccount = document.querySelector('.account-open');
+  const guest = document.getElementById('authGuest');
+  const profile = document.getElementById('accountProfile');
+  const title = document.getElementById('authTitle');
+  const intro = document.getElementById('accountIntro');
+  const error = document.getElementById('authError');
+  const closeAccount = () => { accountModal.classList.remove('show'); document.body.style.overflow=''; };
+  // API lives next to this page. URL() also works when the site is inside a subfolder.
+  const API_URL = new URL('api.php', window.location.href).href;
+
+  const api = async (action, data={}) => {
+    let r;
+    try {
+      r = await fetch(API_URL + '?action=' + encodeURIComponent(action), {
+        method: 'POST',
+        headers: {'Content-Type':'application/json', 'Accept':'application/json'},
+        credentials: 'same-origin',
+        cache: 'no-store',
+        body: JSON.stringify(data)
+      });
+    } catch (networkError) {
+      throw new Error(
+        'Не удалось подключиться к серверу. Проверь, что сайт открыт через PHP-хостинг (http/https), а файл api.php находится рядом с FunDLC_site.html. Не открывай страницу через file://.'
+      );
+    }
+
+    const text = await r.text();
+    let j;
+    try {
+      j = JSON.parse(text);
+    } catch (_) {
+      throw new Error(
+        'Сервер api.php вернул не JSON (HTTP ' + r.status + '). Проверь, что PHP включён и api.php доступен.'
+      );
+    }
+
+    if (!r.ok || !j.ok) throw new Error(j.error || ('Ошибка сервера HTTP ' + r.status + '.'));
+    return j;
+  };
+  function showError(msg, success=false){ error.textContent=msg; error.classList.toggle('auth-success',success); error.style.display='block'; }
+  function clearError(){ error.style.display='none'; error.classList.remove('auth-success'); }
+  function setTab(tab){
+    clearError();
+    document.querySelectorAll('.auth-tab').forEach(b=>b.classList.toggle('active',b.dataset.authTab===tab));
+    document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
+    document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
+    title.textContent=tab==='login'?'Авторизация':'Регистрация';
+    intro.textContent=tab==='login'?'Войди в свой аккаунт FunDLC.':'Создай аккаунт FunDLC.';
+  }
+  function renderAccount(a){
+    guest.style.display='none'; profile.style.display='block'; title.classList.add('minecraft-text'); title.textContent='Личный кабинет'; intro.textContent='Данные твоего аккаунта FunDLC.';
+    document.getElementById('profileName').textContent=a.login; document.getElementById('profileEmail').textContent=a.email;
+    document.getElementById('profileAvatar').textContent=a.login.charAt(0).toUpperCase();
+    document.getElementById('profileUid').textContent=a.uid; document.getElementById('profileUuid').textContent=a.uuid;
+    document.getElementById('profileLogin').textContent=a.login; document.getElementById('profileGroup').textContent=a.group;
+    document.getElementById('profileCreated').textContent=a.created_at; document.getElementById('profileLastLogin').textContent=a.last_login;
+    document.getElementById('profilePlan').textContent=a.plan || 'Нет подписки';
+  }
+  async function loadSession(){
+    try {
+      const r = await fetch(API_URL + '?action=me', {
+        method:'GET',
+        credentials:'same-origin',
+        cache:'no-store',
+        headers:{'Accept':'application/json'}
+      });
+      const text = await r.text();
+      let j;
+      try { j = JSON.parse(text); }
+      catch (_) { throw new Error('Сервер api.php вернул не JSON (HTTP ' + r.status + ').'); }
+      if (!r.ok || !j.ok) throw new Error(j.error || ('Ошибка сервера HTTP ' + r.status + '.'));
+      if(j.account) renderAccount(j.account);
+      else { guest.style.display='block'; profile.style.display='none'; setTab('login'); }
+    } catch(e){
+      guest.style.display='block';
+      profile.style.display='none';
+      setTab('login');
+      // Don't hide the real connection problem behind a generic "Failed to fetch".
+      showError(e.message || 'Не удалось подключиться к серверу.');
+    }
+  }
+  openAccount.addEventListener('click', async()=>{ accountModal.classList.add('show'); document.body.style.overflow='hidden'; await loadSession(); });
+  document.querySelector('.account-close').addEventListener('click',closeAccount); document.querySelector('.account-backdrop').addEventListener('click',closeAccount);
+  document.querySelectorAll('.auth-tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.authTab)));
+  document.getElementById('loginForm').addEventListener('submit',async e=>{
+    e.preventDefault(); clearError(); const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
+    try { const j=await api('login',{identity:loginIdentity.value.trim(),password:loginPassword.value,remember:rememberMe.checked}); renderAccount(j.account); }
+    catch(err){ showError(err.message); } finally { btn.disabled=false; }
+  });
+  document.getElementById('registerForm').addEventListener('submit',async e=>{
+    e.preventDefault(); clearError();
+    if(regPassword.value!==regPassword2.value){ showError('Пароли не совпадают.'); return; }
+    const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true;
+    try { const j=await api('register',{login:regLogin.value.trim(),email:regEmail.value.trim(),password:regPassword.value,robot:robotCheck.checked}); renderAccount(j.account); }
+    catch(err){ showError(err.message); } finally { btn.disabled=false; }
+  });
+  document.getElementById('logoutAccount').addEventListener('click',async()=>{ try{await api('logout'); guest.style.display='block'; profile.style.display='none'; setTab('login'); loginPassword.value='';}catch(e){showError(e.message);} });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&accountModal.classList.contains('show'))closeAccount();});
+})();
+</script>
+</body>
+</html>
