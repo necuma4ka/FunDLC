@@ -1335,3 +1335,50 @@ body.light-theme .account-modal{background:transparent!important}
 document.querySelector('.basic-diamond-icon')?.setAttribute('aria-label','Оранжевый кристалл');
 document.querySelector('.beta-netherite-icon')?.setAttribute('aria-label','Синий кристалл');
 </script>
+<style id="crystal-wide-final">
+/* FINAL CRYSTAL LAYOUT: the artwork fills the entire top image area. */
+.card.subscription > .basic-diamond-icon,
+.card.subscription > .beta-netherite-icon{
+  width:100% !important;
+  height:158px !important;
+  min-height:158px !important;
+  margin:0 0 14px !important;
+  padding:0 !important;
+  display:block !important;
+  position:relative !important;
+  overflow:hidden !important;
+  border-radius:14px !important;
+  border:1px solid #20242c !important;
+  background:#090b0f !important;
+}
+.card.subscription > .basic-diamond-icon img,
+.card.subscription > .beta-netherite-icon img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:100% !important;
+  min-height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  object-fit:fill !important;
+  transform:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  flex:none !important;
+}
+.card.subscription > .basic-diamond-icon img{
+  filter:drop-shadow(0 0 14px rgba(255,105,0,.38)) !important;
+}
+.card.subscription > .beta-netherite-icon img{
+  filter:drop-shadow(0 0 16px rgba(0,150,255,.42)) !important;
+}
+@media(max-width:760px){
+  .card.subscription > .basic-diamond-icon,
+  .card.subscription > .beta-netherite-icon{
+    height:145px !important;
+    min-height:145px !important;
+  }
+}
+</style>
