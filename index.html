@@ -235,28 +235,8 @@ body.light-theme .account-modal #authGuest{background:rgba(255,255,255,.86);bord
 </style>
 
 
-html,body{background:#070304!important;min-height:100%}
-body{position:relative;isolation:isolate;background:transparent!important}
-body::before{
- content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
- background:
- linear-gradient(90deg,rgba(4,1,2,.82) 0%,rgba(4,1,2,.46) 40%,rgba(4,1,2,.10) 72%,rgba(4,1,2,.42) 100%),
- linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.12) 45%,rgba(0,0,0,.80)),
- transform:scale(1.01)
-}
-body::after{
- content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
- background:radial-gradient(circle at 70% 42%,rgba(255,25,35,.09),transparent 35%)
-}
-.nav{background:rgba(8,3,5,.70)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:rgba(255,35,45,.16)!important}
-.card,.notice,.purchase-modal,.account-modal{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-</style>
 
 
-<style>
-html,body{min-height:100%;margin:0;background:#111 url("theme-dark-background.png") center top/cover fixed no-repeat;}
-body.light,html.light{background-image:url("theme-light-background.png");background-size:cover;background-attachment:fixed;}
-</style>
 </head>
 
 <script>
@@ -864,47 +844,38 @@ document.addEventListener('click',function(e){
   }
 });
 </script>
-<style id="fundlc-cinematic-theme-bg">
-/* Cinematic light/dark Minecraft backgrounds */
-.hero{
-  max-width:1280px;
-  min-height:560px;
-  margin:28px auto 0;
-  padding:72px 54px 64px;
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:30px;
-  position:relative;
-  overflow:hidden;
-  isolation:isolate;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
+<style id="fundlc-orange-fullsite-theme">
+/* Full-site CSS-only orange themes — no background images */
+html,body{min-height:100%;}
+body{
   background:
-    linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.08)),
-    url("./theme-dark-background.png") center/100% 100% no-repeat;
-  box-shadow:0 28px 90px rgba(0,0,0,.34), inset 0 0 0 1px rgba(255,255,255,.04);
+    radial-gradient(circle at 50% -15%,rgba(255,122,20,.22),transparent 38%),
+    radial-gradient(circle at 100% 45%,rgba(170,58,0,.18),transparent 34%),
+    linear-gradient(135deg,#160904 0%,#241006 48%,#3a1505 100%) !important;
+  background-attachment:fixed !important;
 }
-.hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  background:radial-gradient(circle at 50% 45%,rgba(0,0,0,0) 0%,rgba(0,0,0,.05) 55%,rgba(0,0,0,.35) 100%);
-  pointer-events:none;
+body::before,body::after{display:none!important}
+.nav{
+  background:rgba(18,7,3,.72)!important;
+  border-color:rgba(255,132,48,.18)!important;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
 }
-body.light-theme .hero{
+.section{position:relative}
+.card,.purchase-modal,.account-profile{
+  background:linear-gradient(145deg,rgba(35,18,11,.92),rgba(18,10,7,.94))!important;
+  border-color:rgba(255,128,45,.18)!important;
+}
+.hero{background:transparent!important;border-color:rgba(255,128,45,.18)!important;box-shadow:0 24px 80px rgba(0,0,0,.22)!important}
+body.light-theme{
   background:
-    linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.10)),
-    url("./theme-light-background.png") center/100% 100% no-repeat;
-  border-color:rgba(80,90,110,.18);
-  box-shadow:0 24px 70px rgba(55,70,95,.16), inset 0 0 0 1px rgba(255,255,255,.28);
+    radial-gradient(circle at 15% 25%,rgba(255,171,90,.28),transparent 30%),
+    radial-gradient(circle at 90% 55%,rgba(255,126,24,.18),transparent 34%),
+    linear-gradient(135deg,#fffdf9 0%,#fff8ef 48%,#fff0df 100%) !important;
+  background-attachment:fixed !important;
 }
-body.light-theme .hero::before{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.12));}
-.hero h1,.hero p,.hero .badge,.hero .actions,.hero .notice{position:relative;z-index:1}
-.hero h1{text-shadow:0 4px 22px rgba(0,0,0,.28)}
-body.light-theme .hero h1{text-shadow:0 2px 12px rgba(255,255,255,.72)}
-.hero p{max-width:720px}
-@media(max-width:760px){
-  .hero{min-height:620px;margin:16px 14px 0;padding:55px 22px;border-radius:22px;background-size:cover}
-}
+body.light-theme .nav{background:rgba(255,252,248,.78)!important;border-color:rgba(225,104,20,.18)!important}
+body.light-theme .card,body.light-theme .purchase-modal,body.light-theme .account-profile{background:rgba(255,255,255,.78)!important;border-color:rgba(224,113,35,.18)!important}
+body.light-theme .hero{background:transparent!important;border-color:rgba(224,113,35,.14)!important}
+body.light-theme .account-modal{background:transparent!important}
+@media(max-width:760px){body{background-attachment:scroll!important}.hero{min-height:620px;margin:16px 14px 0;padding:55px 22px;border-radius:22px}}
 </style>
